@@ -1,0 +1,39 @@
+name: Nifty BeES Price Check
+
+on:
+  schedule:
+    # Every 10 minutes, roughly covering NSE market hours (9:15am-3:30pm IST = 3:45am-10:00am UTC)
+    # Window is slightly wider than exact market hours as a safety buffer; the script itself
+    # does the real work regardless of when it happens to run.
+    - cron: '*/10 3-10 * * 1-5'
+  workflow_dispatch: {}   # lets you manually trigger a run from the Actions tab, for testing
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check-price:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run price check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python scripts/check_price.py
+
+      - name: Commit updated data file
+        run: |
+          git config user.name "dip-tracker-bot"
+          git config user.email "actions@github.com"
+          git add data/niftybees.json
+          git diff --quiet --cached || git commit -m "Update price data [automated]"
+          git push
