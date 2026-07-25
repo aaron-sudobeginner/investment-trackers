@@ -172,6 +172,30 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 
   <div id="tabs-container" class="tabs-row hidden"></div>
 
+  <div class="settings-toggle" onclick="toggleGithubSetup()">⚙ GitHub auto-tracking setup (one-time)</div>
+  <div id="github-setup-panel" class="card hidden">
+    <div class="note" style="margin-top:0;">
+      Paste a fine-grained GitHub token scoped to just your tracker repo, with "Contents: Read and write" permission.
+      This is stored only on this device. When you add an instrument with a ticker below, its name and ticker
+      (nothing else — no balance, no history) get added to your repo's watchlist automatically.
+    </div>
+    <div style="height:10px"></div>
+    <div class="input-row">
+      <label>GitHub username</label>
+      <input type="text" id="gh-owner" placeholder="yourusername">
+    </div>
+    <div class="input-row">
+      <label>Repository name</label>
+      <input type="text" id="gh-repo" placeholder="nifty-toolkit">
+    </div>
+    <div class="input-row">
+      <label>Fine-grained personal access token</label>
+      <input type="password" id="gh-token" placeholder="github_pat_...">
+    </div>
+    <button class="btn btn-gold" onclick="saveGithubConfig()">Save</button>
+    <div class="note" id="gh-status"></div>
+  </div>
+
   <div id="onboarding" class="card hidden">
     <div class="section-title">Add instrument</div>
     <div class="input-row">
@@ -201,6 +225,10 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
     <div class="input-row">
       <label>Auto-sync key (optional — leave blank for manual price entry)</label>
       <input type="text" id="ob-syncKey" placeholder="e.g. niftybees">
+    </div>
+    <div class="input-row">
+      <label>Yahoo ticker for auto-tracking (optional, e.g. GOLDBEES.NS)</label>
+      <input type="text" id="ob-ticker" placeholder="e.g. GOLDBEES.NS">
     </div>
     <button class="btn btn-gold" onclick="finishOnboarding()">Save instrument</button>
     <button class="btn btn-ghost" style="margin-top:8px;" onclick="cancelOnboarding()">Cancel</button>
@@ -308,6 +336,78 @@ function loadStore() {
   render();
 }
 
+function loadGithubConfig() {
+  try {
+    const raw = localStorage.getItem('dip-tracker-github-config');
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function toggleGithubSetup() {
+  const panel = document.getElementById('github-setup-panel');
+  panel.classList.toggle('hidden');
+  if (!panel.classList.contains('hidden')) {
+    const cfg = loadGithubConfig();
+    if (cfg) {
+      document.getElementById('gh-owner').value = cfg.owner || '';
+      document.getElementById('gh-repo').value = cfg.repo || '';
+      document.getElementById('gh-token').value = cfg.token || '';
+    }
+  }
+}
+
+function saveGithubConfig() {
+  const owner = document.getElementById('gh-owner').value.trim();
+  const repo = document.getElementById('gh-repo').value.trim();
+  const token = document.getElementById('gh-token').value.trim();
+  if (!owner || !repo || !token) {
+    document.getElementById('gh-status').textContent = 'Fill in all three fields.';
+    return;
+  }
+  localStorage.setItem('dip-tracker-github-config', JSON.stringify({ owner, repo, token }));
+  document.getElementById('gh-status').textContent = 'Saved. New instruments with a ticker will now auto-add to your watchlist.';
+}
+
+async function pushToWatchlist(key, ticker, name) {
+  const cfg = loadGithubConfig();
+  if (!cfg) return { ok: false, reason: 'GitHub sync not set up yet.' };
+
+  const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data/watchlist.json`;
+  const headers = {
+    'Authorization': `token ${cfg.token}`,
+    'Accept': 'application/vnd.github+json',
+  };
+
+  try {
+    const getRes = await fetch(apiUrl, { headers });
+    if (!getRes.ok) throw new Error('Could not read watchlist.json (' + getRes.status + ')');
+    const getData = await getRes.json();
+    const currentContent = JSON.parse(atob(getData.content));
+
+    if (currentContent.some(e => e.key === key)) {
+      return { ok: true, reason: 'Already in watchlist.' };
+    }
+    currentContent.push({ key, ticker, name });
+
+    const newContentB64 = btoa(JSON.stringify(currentContent, null, 2) + '\n');
+    const putRes = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `Add ${name} to watchlist [from PWA]`,
+        content: newContentB64,
+        sha: getData.sha,
+      }),
+    });
+    if (!putRes.ok) throw new Error('Could not update watchlist.json (' + putRes.status + ')');
+    return { ok: true, reason: 'Added to watchlist.' };
+  } catch (e) {
+    return { ok: false, reason: e.message };
+  }
+}
+
 function saveStore() {
   try {
     localStorage.setItem('dip-tracker-store', JSON.stringify(store));
@@ -329,6 +429,7 @@ function openOnboarding() {
   document.getElementById('ob-inflow').value = '';
   document.getElementById('ob-chunk').value = '';
   document.getElementById('ob-syncKey').value = '';
+  document.getElementById('ob-ticker').value = '';
   document.getElementById('onboarding').classList.remove('hidden');
   document.getElementById('app').classList.add('hidden');
   document.getElementById('empty-state').classList.add('hidden');
@@ -347,6 +448,7 @@ function finishOnboarding() {
   const inflow = parseFloat(document.getElementById('ob-inflow').value);
   const chunk = parseFloat(document.getElementById('ob-chunk').value);
   const syncKey = document.getElementById('ob-syncKey').value.trim().toLowerCase();
+  const ticker = document.getElementById('ob-ticker').value.trim().toUpperCase();
   if (!name || !price || !high || isNaN(balance) || !inflow || !chunk) {
     alert('Please fill in all fields.');
     return;
@@ -355,6 +457,7 @@ function finishOnboarding() {
   store.instruments[id] = {
     name: name,
     syncKey: syncKey || null,
+    ticker: ticker || null,
     currentPrice: price,
     peak: Math.max(price, high),
     peakDate: todayISO(),
@@ -371,6 +474,14 @@ function finishOnboarding() {
   saveStore();
   document.getElementById('onboarding').classList.add('hidden');
   render();
+
+  if (syncKey && ticker) {
+    pushToWatchlist(syncKey, ticker, name).then(result => {
+      if (!result.ok) {
+        alert('Instrument saved locally, but could not auto-add to GitHub watchlist: ' + result.reason + '\n\nYou can add it manually to watchlist.json instead.');
+      }
+    });
+  }
 }
 
 function switchInstrument(id) {
