@@ -274,6 +274,10 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
         <label>Liquid fund annual yield assumption (%)</label>
         <input type="number" id="set-yield" inputmode="decimal">
       </div>
+      <div class="input-row">
+        <label>Auto-sync key (optional)</label>
+        <input type="text" id="set-syncKey" placeholder="e.g. niftybees">
+      </div>
       <button class="btn btn-ghost" onclick="saveSettings()">Save settings</button>
       <div class="danger-link" onclick="removeCurrentInstrument()">Remove this instrument</div>
     </div>
@@ -476,6 +480,7 @@ function toggleSettings() {
     document.getElementById('set-inflow').value = inst.monthlyInflow;
     document.getElementById('set-chunk').value = inst.chunkSize;
     document.getElementById('set-yield').value = inst.liquidYieldPct;
+    document.getElementById('set-syncKey').value = inst.syncKey || '';
   }
 }
 
@@ -484,6 +489,8 @@ function saveSettings() {
   inst.monthlyInflow = parseFloat(document.getElementById('set-inflow').value) || inst.monthlyInflow;
   inst.chunkSize = parseFloat(document.getElementById('set-chunk').value) || inst.chunkSize;
   inst.liquidYieldPct = parseFloat(document.getElementById('set-yield').value) || inst.liquidYieldPct;
+  const newSyncKey = document.getElementById('set-syncKey').value.trim().toLowerCase();
+  inst.syncKey = newSyncKey || null;
   saveStore();
   toggleSettings();
   render();
