@@ -198,6 +198,10 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
       <label>Deployment chunk size per trigger (Rs)</label>
       <input type="number" id="ob-chunk" placeholder="12000" inputmode="decimal">
     </div>
+    <div class="input-row">
+      <label>Auto-sync key (optional — leave blank for manual price entry)</label>
+      <input type="text" id="ob-syncKey" placeholder="e.g. niftybees">
+    </div>
     <button class="btn btn-gold" onclick="finishOnboarding()">Save instrument</button>
     <button class="btn btn-ghost" style="margin-top:8px;" onclick="cancelOnboarding()">Cancel</button>
     <div class="note">Everything is stored only on this device. Nothing is sent anywhere.</div>
@@ -227,6 +231,10 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
       <div style="margin-top:14px; display:flex; gap:8px;">
         <input type="number" id="new-price" placeholder="Update price (Rs)" inputmode="decimal" style="flex:1; background:var(--panel-raised); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; padding:10px 12px; border-radius:8px;">
         <button class="btn btn-ghost btn-sm" onclick="updatePrice()">Update</button>
+      </div>
+      <div id="sync-row" class="hidden" style="margin-top:8px;">
+        <button class="btn btn-ghost btn-sm" style="width:100%;" onclick="syncFromGithub()">↻ Sync latest price</button>
+        <div class="note" id="sync-status"></div>
       </div>
     </div>
 
@@ -316,6 +324,7 @@ function openOnboarding() {
   document.getElementById('ob-balance').value = '';
   document.getElementById('ob-inflow').value = '';
   document.getElementById('ob-chunk').value = '';
+  document.getElementById('ob-syncKey').value = '';
   document.getElementById('onboarding').classList.remove('hidden');
   document.getElementById('app').classList.add('hidden');
   document.getElementById('empty-state').classList.add('hidden');
@@ -333,6 +342,7 @@ function finishOnboarding() {
   const balance = parseFloat(document.getElementById('ob-balance').value);
   const inflow = parseFloat(document.getElementById('ob-inflow').value);
   const chunk = parseFloat(document.getElementById('ob-chunk').value);
+  const syncKey = document.getElementById('ob-syncKey').value.trim().toLowerCase();
   if (!name || !price || !high || isNaN(balance) || !inflow || !chunk) {
     alert('Please fill in all fields.');
     return;
@@ -340,6 +350,7 @@ function finishOnboarding() {
   const id = slugify(name);
   store.instruments[id] = {
     name: name,
+    syncKey: syncKey || null,
     currentPrice: price,
     peak: Math.max(price, high),
     peakDate: todayISO(),
@@ -414,6 +425,28 @@ function updatePrice() {
 function currentDrawdownPct(inst) {
   if (!inst.peak) return 0;
   return Math.max(0, (inst.peak - inst.currentPrice) / inst.peak * 100);
+}
+
+async function syncFromGithub() {
+  const inst = activeInstrument();
+  if (!inst || !inst.syncKey) return;
+  const statusEl = document.getElementById('sync-status');
+  statusEl.textContent = 'Syncing...';
+  try {
+    const res = await fetch('./data/' + inst.syncKey + '.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('File not found (' + res.status + ')');
+    const data = await res.json();
+    inst.currentPrice = data.price;
+    inst.peak = data.peak;
+    inst.peakDate = data.peakDate ? data.peakDate.slice(0,10) : inst.peakDate;
+    inst.tiersHit = data.tiersHit || [];
+    saveStore();
+    const checkedTime = data.lastChecked ? new Date(data.lastChecked).toLocaleString('en-IN') : 'unknown time';
+    statusEl.textContent = 'Synced — last checked ' + checkedTime;
+    render();
+  } catch (e) {
+    statusEl.textContent = 'Sync failed: ' + e.message + '. Enter price manually below instead.';
+  }
 }
 
 function nextUntriggeredTier(inst) {
@@ -536,6 +569,14 @@ function render() {
   }
 
   renderGauge(inst, dd);
+
+  const syncRow = document.getElementById('sync-row');
+  if (inst.syncKey) {
+    syncRow.classList.remove('hidden');
+    document.getElementById('sync-status').textContent = '';
+  } else {
+    syncRow.classList.add('hidden');
+  }
 
   const banner = document.getElementById('topup-banner');
   if (checkTopupDue(inst)) {
