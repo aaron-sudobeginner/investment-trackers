@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Dip Reserve — ETF Tracker</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12151A">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #12151A;
+  --panel: #1B1F26;
+  --panel-raised: #21262F;
+  --border: #2A303A;
+  --text: #E9E6DD;
+  --text-muted: #8A8F98;
+  --gold: #C9932F;
+  --gold-soft: rgba(201,147,47,0.12);
+  --teal: #3E7C7B;
+  --teal-soft: rgba(62,124,123,0.15);
+  --rust: #B5533C;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+.wrap { max-width: 480px; margin: 0 auto; padding: 20px 16px 40px; }
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+header { padding: 20px 4px 16px; }
+header h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+}
+header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+.tabs-row {
+  display: flex; gap: 8px; overflow-x: auto; padding: 0 4px 4px; margin-bottom: 14px;
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.tabs-row::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500;
+  padding: 8px 14px; border-radius: 20px; background: var(--panel-raised);
+  border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap;
+}
+.tab.active { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
+.tab.add-tab { color: var(--teal); border-color: var(--teal); background: var(--teal-soft); }
+
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 14px; }
+
+.hero-row { display: flex; gap: 16px; align-items: stretch; }
+.hero-numbers { flex: 1; min-width: 0; }
+.price-big {
+  font-family: 'Fraunces', serif; font-weight: 500; font-size: 40px; line-height: 1;
+  letter-spacing: -0.02em; margin: 6px 0 2px;
+}
+.price-big small { font-size: 18px; color: var(--text-muted); font-weight: 400; }
+
+.dd-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500;
+  padding: 5px 11px; border-radius: 20px; margin-top: 10px;
+}
+.dd-calm { background: var(--teal-soft); color: #8FCFCB; }
+.dd-active { background: var(--gold-soft); color: var(--gold); }
+
+.peak-line { font-size: 12px; color: var(--text-muted); margin-top: 12px; font-family: 'IBM Plex Mono', monospace; }
+.peak-line b { color: var(--text); font-weight: 500; }
+
+.gauge-col { width: 44px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.gauge-shaft {
+  position: relative; width: 14px; flex: 1; min-height: 130px;
+  background: linear-gradient(180deg, #232830 0%, #1A2E2D 60%, #2E1E17 100%);
+  border-radius: 7px; border: 1px solid var(--border); overflow: visible;
+}
+.gauge-tick { position: absolute; left: -5px; right: -5px; height: 1px; background: rgba(255,255,255,0.12); }
+.gauge-fill { position: absolute; left: 0; right: 0; top: 0; border-radius: 7px 7px 0 0; background: linear-gradient(180deg, rgba(201,147,47,0) 0%, rgba(201,147,47,0.55) 100%); }
+.gauge-marker { position: absolute; left: -8px; right: -8px; height: 3px; background: var(--gold); border-radius: 2px; box-shadow: 0 0 8px rgba(201,147,47,0.7); }
+.gauge-hit { position: absolute; left: -3px; right: -3px; height: 6px; background: #E9E6DD; border-radius: 3px; opacity: 0.85; }
+.gauge-label-top, .gauge-label-bottom { font-size: 10px; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; }
+.gauge-label-top { margin-bottom: 6px; } .gauge-label-bottom { margin-top: 6px; }
+
+.section-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 12px; }
+
+.action-card { border: 1px solid var(--gold); background: linear-gradient(180deg, var(--gold-soft), transparent); }
+.action-card .tier-badge {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600;
+  color: var(--gold); background: rgba(201,147,47,0.15); padding: 3px 9px; border-radius: 6px; margin-bottom: 10px;
+}
+.action-amount { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 500; margin: 4px 0 12px; }
+.action-amount span { font-size: 15px; color: var(--text-muted); font-weight: 400; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
+  padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer; width: 100%;
+  transition: opacity 0.15s;
+}
+.btn:active { opacity: 0.7; }
+.btn-gold { background: var(--gold); color: #1B1408; }
+.btn-ghost { background: var(--panel-raised); color: var(--text); border: 1px solid var(--border); }
+.btn-sm { padding: 8px 14px; font-size: 13px; width: auto; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-block { background: var(--panel-raised); border-radius: 10px; padding: 12px 14px; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'IBM Plex Mono', monospace; }
+.stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 600; margin-top: 4px; }
+
+.input-row { margin-bottom: 12px; }
+.input-row label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.input-row input {
+  width: 100%; background: var(--panel-raised); border: 1px solid var(--border); color: var(--text);
+  font-family: 'IBM Plex Mono', monospace; font-size: 16px; padding: 11px 12px; border-radius: 8px;
+}
+.input-row input:focus { outline: none; border-color: var(--gold); }
+
+.log-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.log-item:last-child { border-bottom: none; }
+.log-item .log-date { color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+.log-item .log-amount { font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
+.log-empty { color: var(--text-muted); font-size: 13px; text-align: center; padding: 16px 0; }
+
+.settings-toggle { text-align: center; color: var(--text-muted); font-size: 12px; padding: 10px 0; cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
+.hidden { display: none; }
+
+.banner {
+  background: var(--teal-soft); border: 1px solid var(--teal); border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.banner span { flex: 1; }
+
+.note { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-top: 8px; }
+.danger-link { color: var(--rust); font-size: 12px; text-align: center; margin-top: 10px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Dip Reserve</div>
+    <h1 id="page-title">ETF Tracker</h1>
+    <div class="sub">Tracks drawdown from peak, not from your own average cost.</div>
+  </header>
+
+  <div id="empty-state" class="card hidden">
+    <div class="section-title">Add your first instrument</div>
+    <div class="note" style="margin-top:0;">Nifty BeES, Gold BeES, any ETF or stock — each gets its own reserve, chunk size and history.</div>
+    <div style="height:14px"></div>
+    <button class="btn btn-gold" onclick="openOnboarding()">+ Add an instrument</button>
+  </div>
+
+  <div id="tabs-container" class="tabs-row hidden"></div>
+
+  <div id="onboarding" class="card hidden">
+    <div class="section-title">Add instrument</div>
+    <div class="input-row">
+      <label>Name (e.g. Nifty BeES, Gold BeES)</label>
+      <input type="text" id="ob-name" placeholder="Nifty BeES">
+    </div>
+    <div class="input-row">
+      <label>Current price (Rs)</label>
+      <input type="number" id="ob-price" placeholder="e.g. 285.40" inputmode="decimal">
+    </div>
+    <div class="input-row">
+      <label>Recent 52-week / all-time high (Rs)</label>
+      <input type="number" id="ob-high" placeholder="e.g. 310.00" inputmode="decimal">
+    </div>
+    <div class="input-row">
+      <label>Current reserve balance for this instrument (Rs)</label>
+      <input type="number" id="ob-balance" placeholder="30000" inputmode="decimal">
+    </div>
+    <div class="input-row">
+      <label>Monthly top-up to this reserve (Rs)</label>
+      <input type="number" id="ob-inflow" placeholder="6000" inputmode="decimal">
+    </div>
+    <div class="input-row">
+      <label>Deployment chunk size per trigger (Rs)</label>
+      <input type="number" id="ob-chunk" placeholder="12000" inputmode="decimal">
+    </div>
+    <button class="btn btn-gold" onclick="finishOnboarding()">Save instrument</button>
+    <button class="btn btn-ghost" style="margin-top:8px;" onclick="cancelOnboarding()">Cancel</button>
+    <div class="note">Everything is stored only on this device. Nothing is sent anywhere.</div>
+  </div>
+
+  <div id="app" class="hidden">
+
+    <div id="topup-banner" class="banner hidden">
+      <span id="topup-text"></span>
+      <button class="btn btn-gold btn-sm" onclick="logTopup()">Add</button>
+    </div>
+
+    <div class="card">
+      <div class="hero-row">
+        <div class="hero-numbers">
+          <div class="eyebrow">Current price</div>
+          <div class="price-big">Rs<span id="cur-price">-</span></div>
+          <div id="dd-pill" class="dd-pill dd-calm">- from peak</div>
+          <div class="peak-line">Peak: <b id="peak-price">-</b> <span id="peak-date"></span></div>
+        </div>
+        <div class="gauge-col">
+          <div class="gauge-label-top">0%</div>
+          <div class="gauge-shaft" id="gauge-shaft"></div>
+          <div class="gauge-label-bottom">40%</div>
+        </div>
+      </div>
+      <div style="margin-top:14px; display:flex; gap:8px;">
+        <input type="number" id="new-price" placeholder="Update price (Rs)" inputmode="decimal" style="flex:1; background:var(--panel-raised); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; padding:10px 12px; border-radius:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="updatePrice()">Update</button>
+      </div>
+    </div>
+
+    <div id="action-section"></div>
+
+    <div class="card">
+      <div class="section-title">Reserve</div>
+      <div class="grid-2">
+        <div class="stat-block">
+          <div class="stat-label">Balance</div>
+          <div class="stat-value" id="reserve-balance">-</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Chunk size</div>
+          <div class="stat-value" id="chunk-display">-</div>
+        </div>
+      </div>
+      <div class="note" id="liquid-note"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Deployment history</div>
+      <div id="deploy-log"></div>
+    </div>
+
+    <div class="settings-toggle" onclick="toggleSettings()">Settings for this instrument</div>
+    <div id="settings-panel" class="card hidden">
+      <div class="input-row">
+        <label>Monthly top-up (Rs)</label>
+        <input type="number" id="set-inflow" inputmode="decimal">
+      </div>
+      <div class="input-row">
+        <label>Chunk size per trigger (Rs)</label>
+        <input type="number" id="set-chunk" inputmode="decimal">
+      </div>
+      <div class="input-row">
+        <label>Liquid fund annual yield assumption (%)</label>
+        <input type="number" id="set-yield" inputmode="decimal">
+      </div>
+      <button class="btn btn-ghost" onclick="saveSettings()">Save settings</button>
+      <div class="danger-link" onclick="removeCurrentInstrument()">Remove this instrument</div>
+    </div>
+
+    <div style="height:8px"></div>
+    <button class="btn btn-ghost" onclick="openOnboarding()">+ Add another instrument</button>
+
+  </div>
+
+</div>
+
+<script>
+const TIERS = [5,10,15,20,25,30,35,40];
+let store = null;
+
+function todayISO() { return new Date().toISOString().slice(0,10); }
+function daysBetween(a, b) { return (new Date(b) - new Date(a)) / (1000*60*60*24); }
+function slugify(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + Date.now().toString(36); }
+function fmtRupee(n) { return Math.round(n).toLocaleString('en-IN'); }
+
+function loadStore() {
+  try {
+    const raw = localStorage.getItem('dip-tracker-store');
+    store = raw ? JSON.parse(raw) : { instruments: {}, activeId: null };
+  } catch (e) {
+    store = { instruments: {}, activeId: null };
+  }
+  render();
+}
+
+function saveStore() {
+  try {
+    localStorage.setItem('dip-tracker-store', JSON.stringify(store));
+  } catch (e) {
+    alert('Could not save - your browser may be blocking local storage.');
+  }
+}
+
+function activeInstrument() {
+  if (!store.activeId) return null;
+  return store.instruments[store.activeId] || null;
+}
+
+function openOnboarding() {
+  document.getElementById('ob-name').value = '';
+  document.getElementById('ob-price').value = '';
+  document.getElementById('ob-high').value = '';
+  document.getElementById('ob-balance').value = '';
+  document.getElementById('ob-inflow').value = '';
+  document.getElementById('ob-chunk').value = '';
+  document.getElementById('onboarding').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('empty-state').classList.add('hidden');
+}
+
+function cancelOnboarding() {
+  document.getElementById('onboarding').classList.add('hidden');
+  render();
+}
+
+function finishOnboarding() {
+  const name = document.getElementById('ob-name').value.trim();
+  const price = parseFloat(document.getElementById('ob-price').value);
+  const high = parseFloat(document.getElementById('ob-high').value);
+  const balance = parseFloat(document.getElementById('ob-balance').value);
+  const inflow = parseFloat(document.getElementById('ob-inflow').value);
+  const chunk = parseFloat(document.getElementById('ob-chunk').value);
+  if (!name || !price || !high || isNaN(balance) || !inflow || !chunk) {
+    alert('Please fill in all fields.');
+    return;
+  }
+  const id = slugify(name);
+  store.instruments[id] = {
+    name: name,
+    currentPrice: price,
+    peak: Math.max(price, high),
+    peakDate: todayISO(),
+    reserveBalance: balance,
+    monthlyInflow: inflow,
+    chunkSize: chunk,
+    liquidYieldPct: 6.5,
+    lastAccrualDate: todayISO(),
+    lastTopupDate: todayISO(),
+    tiersHit: [],
+    deployments: [],
+  };
+  store.activeId = id;
+  saveStore();
+  document.getElementById('onboarding').classList.add('hidden');
+  render();
+}
+
+function switchInstrument(id) {
+  store.activeId = id;
+  saveStore();
+  render();
+}
+
+function removeCurrentInstrument() {
+  const inst = activeInstrument();
+  if (!inst) return;
+  if (!confirm('Remove "' + inst.name + '" and all its history? This cannot be undone.')) return;
+  delete store.instruments[store.activeId];
+  const remaining = Object.keys(store.instruments);
+  store.activeId = remaining.length ? remaining[0] : null;
+  saveStore();
+  document.getElementById('settings-panel').classList.add('hidden');
+  render();
+}
+
+function accrueLiquidFund(inst) {
+  const days = daysBetween(inst.lastAccrualDate, todayISO());
+  if (days <= 0) return;
+  const dailyRate = Math.pow(1 + inst.liquidYieldPct/100, 1/365) - 1;
+  inst.reserveBalance = inst.reserveBalance * Math.pow(1 + dailyRate, days);
+  inst.lastAccrualDate = todayISO();
+}
+
+function checkTopupDue(inst) {
+  return daysBetween(inst.lastTopupDate, todayISO()) >= 30;
+}
+
+function logTopup() {
+  const inst = activeInstrument();
+  inst.reserveBalance += inst.monthlyInflow;
+  inst.lastTopupDate = todayISO();
+  saveStore();
+  render();
+}
+
+function updatePrice() {
+  const inst = activeInstrument();
+  const val = parseFloat(document.getElementById('new-price').value);
+  if (!val || !inst) return;
+  inst.currentPrice = val;
+  if (val >= inst.peak) {
+    inst.peak = val;
+    inst.peakDate = todayISO();
+    inst.tiersHit = [];
+  }
+  saveStore();
+  document.getElementById('new-price').value = '';
+  render();
+}
+
+function currentDrawdownPct(inst) {
+  if (!inst.peak) return 0;
+  return Math.max(0, (inst.peak - inst.currentPrice) / inst.peak * 100);
+}
+
+function nextUntriggeredTier(inst) {
+  const dd = currentDrawdownPct(inst);
+  for (const t of TIERS) {
+    if (dd >= t && !inst.tiersHit.includes(t)) return t;
+  }
+  return null;
+}
+
+function logDeployment(tier) {
+  const inst = activeInstrument();
+  const amount = Math.min(inst.chunkSize, inst.reserveBalance);
+  if (amount <= 0) { alert('Reserve balance is empty.'); return; }
+  inst.reserveBalance -= amount;
+  inst.tiersHit.push(tier);
+  inst.deployments.unshift({ date: todayISO(), tier: tier, amount: amount, price: inst.currentPrice });
+  saveStore();
+  render();
+}
+
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  panel.classList.toggle('hidden');
+  if (!panel.classList.contains('hidden')) {
+    const inst = activeInstrument();
+    document.getElementById('set-inflow').value = inst.monthlyInflow;
+    document.getElementById('set-chunk').value = inst.chunkSize;
+    document.getElementById('set-yield').value = inst.liquidYieldPct;
+  }
+}
+
+function saveSettings() {
+  const inst = activeInstrument();
+  inst.monthlyInflow = parseFloat(document.getElementById('set-inflow').value) || inst.monthlyInflow;
+  inst.chunkSize = parseFloat(document.getElementById('set-chunk').value) || inst.chunkSize;
+  inst.liquidYieldPct = parseFloat(document.getElementById('set-yield').value) || inst.liquidYieldPct;
+  saveStore();
+  toggleSettings();
+  render();
+}
+
+function renderTabs() {
+  const ids = Object.keys(store.instruments);
+  const container = document.getElementById('tabs-container');
+  if (ids.length === 0) {
+    container.classList.add('hidden');
+    return;
+  }
+  container.classList.remove('hidden');
+  container.innerHTML = ids.map(id => {
+    const inst = store.instruments[id];
+    const active = id === store.activeId ? 'active' : '';
+    return '<div class="tab ' + active + '" onclick="switchInstrument(\'' + id + '\')">' + inst.name + '</div>';
+  }).join('') + '<div class="tab add-tab" onclick="openOnboarding()">+ Add</div>';
+}
+
+function renderGauge(inst, dd) {
+  const shaft = document.getElementById('gauge-shaft');
+  shaft.innerHTML = '';
+  const maxPct = 40;
+  const fillPct = Math.min(dd, maxPct) / maxPct * 100;
+
+  const fill = document.createElement('div');
+  fill.className = 'gauge-fill';
+  fill.style.height = fillPct + '%';
+  shaft.appendChild(fill);
+
+  TIERS.forEach(t => {
+    const tick = document.createElement('div');
+    tick.className = 'gauge-tick';
+    tick.style.top = (t/maxPct*100) + '%';
+    shaft.appendChild(tick);
+    if (inst.tiersHit.includes(t)) {
+      const hit = document.createElement('div');
+      hit.className = 'gauge-hit';
+      hit.style.top = (t/maxPct*100) + '%';
+      shaft.appendChild(hit);
+    }
+  });
+
+  const marker = document.createElement('div');
+  marker.className = 'gauge-marker';
+  marker.style.top = fillPct + '%';
+  shaft.appendChild(marker);
+}
+
+function render() {
+  renderTabs();
+  const inst = activeInstrument();
+
+  if (!inst) {
+    document.getElementById('empty-state').classList.remove('hidden');
+    document.getElementById('onboarding').classList.add('hidden');
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('page-title').textContent = 'ETF Tracker';
+    return;
+  }
+
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('onboarding').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('page-title').textContent = inst.name;
+
+  accrueLiquidFund(inst);
+  saveStore();
+
+  const dd = currentDrawdownPct(inst);
+  document.getElementById('cur-price').textContent = inst.currentPrice.toFixed(2);
+  document.getElementById('peak-price').textContent = 'Rs' + inst.peak.toFixed(2);
+  document.getElementById('peak-date').textContent = '(' + inst.peakDate + ')';
+
+  const pill = document.getElementById('dd-pill');
+  if (dd < 3) {
+    pill.className = 'dd-pill dd-calm';
+    pill.textContent = dd < 0.5 ? 'At or near peak' : ('Down ' + dd.toFixed(1) + '% from peak');
+  } else {
+    pill.className = 'dd-pill dd-active';
+    pill.textContent = 'Down ' + dd.toFixed(1) + '% from peak';
+  }
+
+  renderGauge(inst, dd);
+
+  const banner = document.getElementById('topup-banner');
+  if (checkTopupDue(inst)) {
+    banner.classList.remove('hidden');
+    document.getElementById('topup-text').textContent =
+      'Monthly top-up of Rs' + fmtRupee(inst.monthlyInflow) + ' is due for ' + inst.name;
+  } else {
+    banner.classList.add('hidden');
+  }
+
+  const tier = nextUntriggeredTier(inst);
+  const actionEl = document.getElementById('action-section');
+  if (tier !== null) {
+    const amount = Math.min(inst.chunkSize, inst.reserveBalance);
+    actionEl.innerHTML =
+      '<div class="card action-card">' +
+        '<div class="tier-badge">TIER TRIGGERED - ' + tier + '% FROM PEAK</div>' +
+        '<div class="section-title" style="margin-bottom:2px;">Deploy now</div>' +
+        '<div class="action-amount">Rs' + fmtRupee(amount) + ' <span>from reserve</span></div>' +
+        '<button class="btn btn-gold" onclick="logDeployment(' + tier + ')">Log this deployment</button>' +
+      '</div>';
+  } else {
+    actionEl.innerHTML =
+      '<div class="card">' +
+        '<div class="section-title" style="margin-bottom:4px;">No tier triggered</div>' +
+        '<div class="note" style="margin-top:0;">Within 5% of peak, or every tier reached so far has already been deployed. Nothing to do - keep the reserve building.</div>' +
+      '</div>';
+  }
+
+  document.getElementById('reserve-balance').textContent = 'Rs' + fmtRupee(inst.reserveBalance);
+  document.getElementById('chunk-display').textContent = 'Rs' + fmtRupee(inst.chunkSize);
+  document.getElementById('liquid-note').textContent =
+    'Growing at ~' + inst.liquidYieldPct + '% p.a. in your liquid fund, plus Rs' + fmtRupee(inst.monthlyInflow) + '/month top-ups.';
+
+  const logEl = document.getElementById('deploy-log');
+  if (inst.deployments.length === 0) {
+    logEl.innerHTML = '<div class="log-empty">No deployments logged yet.</div>';
+  } else {
+    logEl.innerHTML = inst.deployments.map(d =>
+      '<div class="log-item">' +
+        '<div>' +
+          '<div>-' + d.tier + '% tier</div>' +
+          '<div class="log-date">' + d.date + ' - Rs' + d.price.toFixed(2) + '</div>' +
+        '</div>' +
+        '<div class="log-amount">Rs' + fmtRupee(d.amount) + '</div>' +
+      '</div>'
+    ).join('');
+  }
+}
+
+loadStore();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
