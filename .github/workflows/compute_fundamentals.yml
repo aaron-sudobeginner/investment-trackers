@@ -1,0 +1,45 @@
+name: Compute Fundamentals
+
+on:
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: 'Yahoo ticker, e.g. GOLDBEES.NS'
+        required: true
+        type: string
+      key:
+        description: 'Sync key for this instrument, e.g. goldbees'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  compute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install yfinance --quiet
+
+      - name: Compute fundamentals
+        env:
+          TICKER: ${{ inputs.ticker }}
+          KEY: ${{ inputs.key }}
+        run: python scripts/compute_fundamentals.py
+
+      - name: Commit result
+        run: |
+          git config user.name "dip-tracker-bot"
+          git config user.email "actions@github.com"
+          git add data/fundamentals/
+          git diff --quiet --cached || git commit -m "Compute fundamentals for ${{ inputs.key }} [on-demand]"
+          git push
