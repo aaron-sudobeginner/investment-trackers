@@ -10,148 +10,87 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #12151A;
-  --panel: #1B1F26;
-  --panel-raised: #21262F;
-  --border: #2A303A;
-  --text: #E9E6DD;
-  --text-muted: #8A8F98;
-  --gold: #C9932F;
-  --gold-soft: rgba(201,147,47,0.12);
-  --teal: #3E7C7B;
-  --teal-soft: rgba(62,124,123,0.15);
+  --bg: #12151A; --panel: #1B1F26; --panel-raised: #21262F; --border: #2A303A;
+  --text: #E9E6DD; --text-muted: #8A8F98;
+  --gold: #C9932F; --gold-soft: rgba(201,147,47,0.12);
+  --teal: #3E7C7B; --teal-soft: rgba(62,124,123,0.15);
   --rust: #B5533C;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-  padding-bottom: 60px;
-}
-
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; padding-bottom: 60px; }
 .wrap { max-width: 480px; margin: 0 auto; padding: 20px 16px 40px; }
-
-.eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
+.eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
 header { padding: 20px 4px 16px; }
-header h1 {
-  font-family: 'Fraunces', serif;
-  font-weight: 500;
-  font-size: 24px;
-  letter-spacing: -0.01em;
-}
+header h1 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 24px; letter-spacing: -0.01em; }
 header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
-
-.tabs-row {
-  display: flex; gap: 8px; overflow-x: auto; padding: 0 4px 4px; margin-bottom: 14px;
-  -ms-overflow-style: none; scrollbar-width: none;
-}
+.tabs-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 4px 4px; margin-bottom: 14px; -ms-overflow-style: none; scrollbar-width: none; }
 .tabs-row::-webkit-scrollbar { display: none; }
-.tab {
-  flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500;
-  padding: 8px 14px; border-radius: 20px; background: var(--panel-raised);
-  border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap;
-}
+.tab { flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; padding: 8px 14px; border-radius: 20px; background: var(--panel-raised); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap; }
 .tab.active { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
 .tab.add-tab { color: var(--teal); border-color: var(--teal); background: var(--teal-soft); }
-
 .card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 14px; }
-
 .hero-row { display: flex; gap: 16px; align-items: stretch; }
 .hero-numbers { flex: 1; min-width: 0; }
-.price-big {
-  font-family: 'Fraunces', serif; font-weight: 500; font-size: 40px; line-height: 1;
-  letter-spacing: -0.02em; margin: 6px 0 2px;
-}
-.price-big small { font-size: 18px; color: var(--text-muted); font-weight: 400; }
-
-.dd-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500;
-  padding: 5px 11px; border-radius: 20px; margin-top: 10px;
-}
+.price-big { font-family: 'Fraunces', serif; font-weight: 500; font-size: 40px; line-height: 1; letter-spacing: -0.02em; margin: 6px 0 2px; }
+.dd-pill { display: inline-flex; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; padding: 5px 11px; border-radius: 20px; margin-top: 10px; }
 .dd-calm { background: var(--teal-soft); color: #8FCFCB; }
 .dd-active { background: var(--gold-soft); color: var(--gold); }
-
 .peak-line { font-size: 12px; color: var(--text-muted); margin-top: 12px; font-family: 'IBM Plex Mono', monospace; }
 .peak-line b { color: var(--text); font-weight: 500; }
-
 .gauge-col { width: 44px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-.gauge-shaft {
-  position: relative; width: 14px; flex: 1; min-height: 130px;
-  background: linear-gradient(180deg, #232830 0%, #1A2E2D 60%, #2E1E17 100%);
-  border-radius: 7px; border: 1px solid var(--border); overflow: visible;
-}
+.gauge-shaft { position: relative; width: 14px; flex: 1; min-height: 130px; background: linear-gradient(180deg, #232830 0%, #1A2E2D 60%, #2E1E17 100%); border-radius: 7px; border: 1px solid var(--border); overflow: visible; }
 .gauge-tick { position: absolute; left: -5px; right: -5px; height: 1px; background: rgba(255,255,255,0.12); }
 .gauge-fill { position: absolute; left: 0; right: 0; top: 0; border-radius: 7px 7px 0 0; background: linear-gradient(180deg, rgba(201,147,47,0) 0%, rgba(201,147,47,0.55) 100%); }
 .gauge-marker { position: absolute; left: -8px; right: -8px; height: 3px; background: var(--gold); border-radius: 2px; box-shadow: 0 0 8px rgba(201,147,47,0.7); }
 .gauge-hit { position: absolute; left: -3px; right: -3px; height: 6px; background: #E9E6DD; border-radius: 3px; opacity: 0.85; }
 .gauge-label-top, .gauge-label-bottom { font-size: 10px; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; }
 .gauge-label-top { margin-bottom: 6px; } .gauge-label-bottom { margin-top: 6px; }
-
 .section-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; margin-bottom: 12px; }
-
 .action-card { border: 1px solid var(--gold); background: linear-gradient(180deg, var(--gold-soft), transparent); }
-.action-card .tier-badge {
-  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600;
-  color: var(--gold); background: rgba(201,147,47,0.15); padding: 3px 9px; border-radius: 6px; margin-bottom: 10px;
-}
+.action-card .tier-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; color: var(--gold); background: rgba(201,147,47,0.15); padding: 3px 9px; border-radius: 6px; margin-bottom: 10px; }
 .action-amount { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 500; margin: 4px 0 12px; }
 .action-amount span { font-size: 15px; color: var(--text-muted); font-weight: 400; }
-
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px;
-  padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer; width: 100%;
-  transition: opacity 0.15s;
-}
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer; width: 100%; transition: opacity 0.15s; }
 .btn:active { opacity: 0.7; }
 .btn-gold { background: var(--gold); color: #1B1408; }
 .btn-ghost { background: var(--panel-raised); color: var(--text); border: 1px solid var(--border); }
 .btn-sm { padding: 8px 14px; font-size: 13px; width: auto; }
-
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .stat-block { background: var(--panel-raised); border-radius: 10px; padding: 12px 14px; }
 .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'IBM Plex Mono', monospace; }
 .stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 600; margin-top: 4px; }
-
 .input-row { margin-bottom: 12px; }
 .input-row label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-.input-row input {
-  width: 100%; background: var(--panel-raised); border: 1px solid var(--border); color: var(--text);
-  font-family: 'IBM Plex Mono', monospace; font-size: 16px; padding: 11px 12px; border-radius: 8px;
-}
+.input-row input { width: 100%; background: var(--panel-raised); border: 1px solid var(--border); color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 16px; padding: 11px 12px; border-radius: 8px; }
 .input-row input:focus { outline: none; border-color: var(--gold); }
-
 .log-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
 .log-item:last-child { border-bottom: none; }
 .log-item .log-date { color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
 .log-item .log-amount { font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
 .log-empty { color: var(--text-muted); font-size: 13px; text-align: center; padding: 16px 0; }
-
 .settings-toggle { text-align: center; color: var(--text-muted); font-size: 12px; padding: 10px 0; cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
 .hidden { display: none; }
-
-.banner {
-  background: var(--teal-soft); border: 1px solid var(--teal); border-radius: 10px; padding: 12px 14px;
-  font-size: 13px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
-}
+.banner { background: var(--teal-soft); border: 1px solid var(--teal); border-radius: 10px; padding: 12px 14px; font-size: 13px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .banner span { flex: 1; }
-
 .note { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-top: 8px; }
 .danger-link { color: var(--rust); font-size: 12px; text-align: center; margin-top: 10px; cursor: pointer; }
+.search-result-item { padding: 10px 12px; cursor: pointer; font-size: 13px; border-bottom: 1px solid var(--border); }
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:active { background: var(--gold-soft); }
+.search-result-item .sr-symbol { font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: var(--gold); }
+.search-result-item .sr-name { color: var(--text-muted); font-size: 11px; margin-top: 2px; }
+
+.pie-wrap { display: flex; align-items: center; gap: 20px; }
+.pie-chart { width: 130px; height: 130px; border-radius: 50%; flex-shrink: 0; }
+.pie-legend { flex: 1; min-width: 0; }
+.pie-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 8px; }
+.pie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pie-legend-name { flex: 1; color: var(--text); }
+.pie-legend-value { font-family: 'IBM Plex Mono', monospace; color: var(--text-muted); }
+
+.allocate-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.allocate-row .al-name { flex: 1; font-size: 14px; }
+.allocate-row input { width: 110px; background: var(--panel-raised); border: 1px solid var(--border); color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 14px; padding: 9px 10px; border-radius: 8px; text-align: right; }
 </style>
 </head>
 <body>
@@ -163,9 +102,11 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
     <div class="sub">Tracks drawdown from peak, not from your own average cost.</div>
   </header>
 
+  <div id="portfolio-overview" class="card hidden"></div>
+
   <div id="empty-state" class="card hidden">
     <div class="section-title">Add your first instrument</div>
-    <div class="note" style="margin-top:0;">Nifty BeES, Gold BeES, any ETF or stock — each gets its own reserve, chunk size and history.</div>
+    <div class="note" style="margin-top:0;">Search for any NSE-listed ETF or stock — everything computes automatically.</div>
     <div style="height:14px"></div>
     <button class="btn btn-gold" onclick="openOnboarding()">+ Add an instrument</button>
   </div>
@@ -175,71 +116,78 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
   <div class="settings-toggle" onclick="toggleGithubSetup()">⚙ GitHub auto-tracking setup (one-time)</div>
   <div id="github-setup-panel" class="card hidden">
     <div class="note" style="margin-top:0;">
-      Paste a fine-grained GitHub token scoped to just your tracker repo, with "Contents: Read and write" permission.
-      This is stored only on this device. When you add an instrument with a ticker below, its name and ticker
-      (nothing else — no balance, no history) get added to your repo's watchlist automatically.
+      Paste a fine-grained GitHub token scoped to just your tracker repo, with "Contents: Read and write"
+      and "Actions: Read and write" permissions. Stored only on this device.
     </div>
     <div style="height:10px"></div>
-    <div class="input-row">
-      <label>GitHub username</label>
-      <input type="text" id="gh-owner" placeholder="yourusername">
-    </div>
-    <div class="input-row">
-      <label>Repository name</label>
-      <input type="text" id="gh-repo" placeholder="nifty-toolkit">
-    </div>
-    <div class="input-row">
-      <label>Fine-grained personal access token</label>
-      <input type="password" id="gh-token" placeholder="github_pat_...">
-    </div>
+    <div class="input-row"><label>GitHub username</label><input type="text" id="gh-owner" placeholder="yourusername"></div>
+    <div class="input-row"><label>Repository name</label><input type="text" id="gh-repo" placeholder="nifty-toolkit"></div>
+    <div class="input-row"><label>Fine-grained personal access token</label><input type="password" id="gh-token" placeholder="github_pat_..."></div>
     <button class="btn btn-gold" onclick="saveGithubConfig()">Save</button>
     <div class="note" id="gh-status"></div>
   </div>
 
+  <div class="settings-toggle" onclick="toggleGlobalSettings()">⚙ Reserve settings (monthly top-up, yield)</div>
+  <div id="global-settings-panel" class="card hidden">
+    <div class="input-row"><label>Monthly top-up to total reserve (Rs)</label><input type="number" id="gs-inflow" inputmode="decimal"></div>
+    <div class="input-row"><label>Liquid fund annual yield assumption (%)</label><input type="number" id="gs-yield" inputmode="decimal"></div>
+    <button class="btn btn-ghost" onclick="saveGlobalSettings()">Save</button>
+  </div>
+
+  <div id="allocate-screen" class="card hidden">
+    <div class="section-title">Allocate reserve</div>
+    <div class="input-row">
+      <label>Total reserve available (Rs)</label>
+      <input type="number" id="al-total" inputmode="decimal" oninput="updateAllocateUnallocated()">
+    </div>
+    <div id="allocate-instrument-rows"></div>
+    <div class="stat-block" style="margin-bottom:14px;">
+      <div class="stat-label">Unallocated</div>
+      <div class="stat-value" id="al-unallocated">Rs0</div>
+    </div>
+    <button class="btn btn-gold" onclick="saveAllocations()">Save allocation</button>
+    <button class="btn btn-ghost" style="margin-top:8px;" onclick="closeAllocateScreen()">Cancel</button>
+  </div>
+
   <div id="onboarding" class="card hidden">
     <div class="section-title">Add instrument</div>
-    <div class="input-row">
-      <label>Name (e.g. Nifty BeES, Gold BeES)</label>
-      <input type="text" id="ob-name" placeholder="Nifty BeES">
+
+    <div class="input-row" style="position:relative;">
+      <label>Search NSE securities</label>
+      <input type="text" id="ob-search" placeholder="Type a name or symbol..." autocomplete="off" oninput="onSearchInput()">
+      <div id="search-results" class="hidden" style="position:absolute; top:100%; left:0; right:0; background:var(--panel-raised); border:1px solid var(--border); border-radius:8px; max-height:220px; overflow-y:auto; z-index:10; margin-top:4px;"></div>
     </div>
-    <div class="input-row">
-      <label>Current price (Rs)</label>
-      <input type="number" id="ob-price" placeholder="e.g. 285.40" inputmode="decimal">
+
+    <div id="ob-selected-name" class="note" style="margin-top:0;"></div>
+    <div id="ob-compute-status" class="note"></div>
+    <div id="progress-wrap" class="hidden" style="margin-bottom:12px;">
+      <div style="background:var(--panel-raised); border-radius:6px; height:6px; overflow:hidden;">
+        <div id="progress-bar" style="height:100%; width:0%; background:var(--gold); transition:width 0.4s;"></div>
+      </div>
+      <div class="note" id="progress-status" style="margin-top:6px;"></div>
     </div>
-    <div class="input-row">
-      <label>Recent 52-week / all-time high (Rs)</label>
-      <input type="number" id="ob-high" placeholder="e.g. 310.00" inputmode="decimal">
-    </div>
-    <div class="input-row">
-      <label>Current reserve balance for this instrument (Rs)</label>
-      <input type="number" id="ob-balance" placeholder="30000" inputmode="decimal">
-    </div>
-    <div class="input-row">
-      <label>Monthly top-up to this reserve (Rs)</label>
-      <input type="number" id="ob-inflow" placeholder="6000" inputmode="decimal">
-    </div>
-    <div class="input-row">
-      <label>Deployment chunk size per trigger (Rs)</label>
+
+    <div class="input-row hidden" id="ob-chunk-row">
+      <label>Deploy this much when a tier triggers (Rs)</label>
       <input type="number" id="ob-chunk" placeholder="12000" inputmode="decimal">
     </div>
-    <div class="input-row">
-      <label>Auto-sync key (optional — leave blank for manual price entry)</label>
-      <input type="text" id="ob-syncKey" placeholder="e.g. niftybees">
-    </div>
-    <div class="input-row">
-      <label>Yahoo ticker for auto-tracking (optional, e.g. GOLDBEES.NS)</label>
-      <input type="text" id="ob-ticker" placeholder="e.g. GOLDBEES.NS">
-    </div>
-    <button class="btn btn-gold" onclick="finishOnboarding()">Save instrument</button>
+
+    <input type="hidden" id="ob-name">
+    <input type="hidden" id="ob-ticker">
+    <input type="hidden" id="ob-syncKey">
+    <input type="hidden" id="ob-price">
+    <input type="hidden" id="ob-high">
+
+    <button class="btn btn-gold hidden" id="ob-save-btn" onclick="finishOnboarding()">Save instrument</button>
     <button class="btn btn-ghost" style="margin-top:8px;" onclick="cancelOnboarding()">Cancel</button>
-    <div class="note">Everything is stored only on this device. Nothing is sent anywhere.</div>
+    <div class="note">Everything is stored only on this device (plus your GitHub repo if configured). Nothing else is sent anywhere.</div>
   </div>
 
   <div id="app" class="hidden">
 
     <div id="topup-banner" class="banner hidden">
       <span id="topup-text"></span>
-      <button class="btn btn-gold btn-sm" onclick="logTopup()">Add</button>
+      <button class="btn btn-gold btn-sm" onclick="logGlobalTopup()">Add</button>
     </div>
 
     <div class="card">
@@ -256,31 +204,26 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
           <div class="gauge-label-bottom">40%</div>
         </div>
       </div>
-      <div style="margin-top:14px; display:flex; gap:8px;">
-        <input type="number" id="new-price" placeholder="Update price (Rs)" inputmode="decimal" style="flex:1; background:var(--panel-raised); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; padding:10px 12px; border-radius:8px;">
-        <button class="btn btn-ghost btn-sm" onclick="updatePrice()">Update</button>
-      </div>
-      <div id="sync-row" class="hidden" style="margin-top:8px;">
-        <button class="btn btn-ghost btn-sm" style="width:100%;" onclick="syncFromGithub()">↻ Sync latest price</button>
-        <div class="note" id="sync-status"></div>
+      <div id="sync-row" class="hidden" style="margin-top:14px;">
+        <button class="btn btn-ghost btn-sm" style="width:100%;" onclick="manualSyncActive()">↻ Sync latest price</button>
       </div>
     </div>
 
     <div id="action-section"></div>
 
     <div class="card">
-      <div class="section-title">Reserve</div>
+      <div class="section-title">This instrument</div>
       <div class="grid-2">
         <div class="stat-block">
-          <div class="stat-label">Balance</div>
-          <div class="stat-value" id="reserve-balance">-</div>
+          <div class="stat-label">Allocated</div>
+          <div class="stat-value" id="allocated-display">-</div>
         </div>
         <div class="stat-block">
           <div class="stat-label">Chunk size</div>
           <div class="stat-value" id="chunk-display">-</div>
         </div>
       </div>
-      <div class="note" id="liquid-note"></div>
+      <div class="note">To change how much is allocated here, use the Allocate screen on the home page.</div>
     </div>
 
     <div class="card">
@@ -288,24 +231,10 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
       <div id="deploy-log"></div>
     </div>
 
-    <div class="settings-toggle" onclick="toggleSettings()">Settings for this instrument</div>
+    <div class="settings-toggle" onclick="toggleSettings()">⚙ Settings for this instrument</div>
     <div id="settings-panel" class="card hidden">
-      <div class="input-row">
-        <label>Monthly top-up (Rs)</label>
-        <input type="number" id="set-inflow" inputmode="decimal">
-      </div>
-      <div class="input-row">
-        <label>Chunk size per trigger (Rs)</label>
-        <input type="number" id="set-chunk" inputmode="decimal">
-      </div>
-      <div class="input-row">
-        <label>Liquid fund annual yield assumption (%)</label>
-        <input type="number" id="set-yield" inputmode="decimal">
-      </div>
-      <div class="input-row">
-        <label>Auto-sync key (optional)</label>
-        <input type="text" id="set-syncKey" placeholder="e.g. niftybees">
-      </div>
+      <div class="input-row"><label>Chunk size per trigger (Rs)</label><input type="number" id="set-chunk" inputmode="decimal"></div>
+      <div class="input-row"><label>Auto-sync key</label><input type="text" id="set-syncKey"></div>
       <button class="btn btn-ghost" onclick="saveSettings()">Save settings</button>
       <div class="danger-link" onclick="removeCurrentInstrument()">Remove this instrument</div>
     </div>
@@ -319,30 +248,80 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 
 <script>
 const TIERS = [5,10,15,20,25,30,35,40];
+const PIE_COLORS = ['#C9932F','#3E7C7B','#B5533C','#8A6FB5','#4C8FC9','#C97AB5','#7AC98F','#C9B84C'];
 let store = null;
+let nseSecurities = null;
+let lastAutoComputedTicker = null;
 
 function todayISO() { return new Date().toISOString().slice(0,10); }
 function daysBetween(a, b) { return (new Date(b) - new Date(a)) / (1000*60*60*24); }
 function slugify(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + Date.now().toString(36); }
 function fmtRupee(n) { return Math.round(n).toLocaleString('en-IN'); }
 
+// ---- store load/save + migration ----
 function loadStore() {
   try {
     const raw = localStorage.getItem('dip-tracker-store');
-    store = raw ? JSON.parse(raw) : { instruments: {}, activeId: null };
+    store = raw ? JSON.parse(raw) : defaultStore();
   } catch (e) {
-    store = { instruments: {}, activeId: null };
+    store = defaultStore();
   }
+  migrateStore();
   render();
+  autoSyncAllPrices();
+  pullStateFromGithub().then(() => autoSyncAllPrices());
 }
 
+function defaultStore() {
+  return {
+    totalReserve: 0, monthlyInflow: 6000, liquidYieldPct: 6.5,
+    lastAccrualDate: todayISO(), lastTopupDate: todayISO(),
+    instruments: {}, activeId: null,
+  };
+}
+
+function migrateStore() {
+  if (store.totalReserve !== undefined) return; // already new format
+  let total = 0, inflow = 6000, yieldPct = 6.5;
+  const ids = Object.keys(store.instruments || {});
+  ids.forEach(id => {
+    const inst = store.instruments[id];
+    if (inst.reserveBalance !== undefined) {
+      total += inst.reserveBalance;
+      inflow = inst.monthlyInflow || inflow;
+      yieldPct = inst.liquidYieldPct || yieldPct;
+      inst.allocated = inst.reserveBalance;
+      delete inst.reserveBalance; delete inst.monthlyInflow;
+      delete inst.liquidYieldPct; delete inst.lastAccrualDate; delete inst.lastTopupDate;
+    }
+    if (inst.allocated === undefined) inst.allocated = 0;
+  });
+  store.totalReserve = total;
+  store.monthlyInflow = inflow;
+  store.liquidYieldPct = yieldPct;
+  store.lastAccrualDate = todayISO();
+  store.lastTopupDate = todayISO();
+  saveStoreLocal();
+}
+
+function saveStoreLocal() {
+  try { localStorage.setItem('dip-tracker-store', JSON.stringify(store)); }
+  catch (e) { console.log('local save failed', e.message); }
+}
+
+function saveStore() { saveStoreLocal(); }
+
+function activeInstrument() {
+  if (!store.activeId) return null;
+  return store.instruments[store.activeId] || null;
+}
+
+// ---- GitHub config ----
 function loadGithubConfig() {
   try {
     const raw = localStorage.getItem('dip-tracker-github-config');
     return raw ? JSON.parse(raw) : null;
-  } catch (e) {
-    return null;
-  }
+  } catch (e) { return null; }
 }
 
 function toggleGithubSetup() {
@@ -362,77 +341,240 @@ function saveGithubConfig() {
   const owner = document.getElementById('gh-owner').value.trim();
   const repo = document.getElementById('gh-repo').value.trim();
   const token = document.getElementById('gh-token').value.trim();
-  if (!owner || !repo || !token) {
-    document.getElementById('gh-status').textContent = 'Fill in all three fields.';
-    return;
-  }
+  if (!owner || !repo || !token) { document.getElementById('gh-status').textContent = 'Fill in all three fields.'; return; }
   localStorage.setItem('dip-tracker-github-config', JSON.stringify({ owner, repo, token }));
-  document.getElementById('gh-status').textContent = 'Saved. New instruments with a ticker will now auto-add to your watchlist.';
+  document.getElementById('gh-status').textContent = 'Saved.';
+}
+
+function toggleGlobalSettings() {
+  const panel = document.getElementById('global-settings-panel');
+  panel.classList.toggle('hidden');
+  if (!panel.classList.contains('hidden')) {
+    document.getElementById('gs-inflow').value = store.monthlyInflow;
+    document.getElementById('gs-yield').value = store.liquidYieldPct;
+  }
+}
+
+function saveGlobalSettings() {
+  store.monthlyInflow = parseFloat(document.getElementById('gs-inflow').value) || store.monthlyInflow;
+  store.liquidYieldPct = parseFloat(document.getElementById('gs-yield').value) || store.liquidYieldPct;
+  saveStore(); pushStateToGithub();
+  toggleGlobalSettings(); render();
+}
+
+// ---- cross-device sync ----
+async function pullStateFromGithub() {
+  const cfg = loadGithubConfig();
+  if (!cfg) return;
+  const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data/user-state.json`;
+  try {
+    const res = await fetch(apiUrl, { headers: { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' } });
+    if (!res.ok) return;
+    const data = await res.json();
+    const remoteStore = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+    store = remoteStore;
+    migrateStore();
+    saveStoreLocal();
+    render();
+  } catch (e) { console.log('pull failed', e.message); }
+}
+
+async function pushStateToGithub() {
+  const cfg = loadGithubConfig();
+  if (!cfg) return;
+  const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data/user-state.json`;
+  const headers = { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' };
+  try {
+    let sha = null;
+    const getRes = await fetch(apiUrl, { headers });
+    if (getRes.ok) sha = (await getRes.json()).sha;
+    const contentB64 = btoa(unescape(encodeURIComponent(JSON.stringify(store, null, 2))));
+    await fetch(apiUrl, {
+      method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Sync state [from PWA]', content: contentB64, ...(sha ? { sha } : {}) }),
+    });
+  } catch (e) { console.log('push failed', e.message); }
 }
 
 async function pushToWatchlist(key, ticker, name) {
   const cfg = loadGithubConfig();
   if (!cfg) return { ok: false, reason: 'GitHub sync not set up yet.' };
-
   const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data/watchlist.json`;
-  const headers = {
-    'Authorization': `token ${cfg.token}`,
-    'Accept': 'application/vnd.github+json',
-  };
-
+  const headers = { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' };
   try {
     const getRes = await fetch(apiUrl, { headers });
     if (!getRes.ok) throw new Error('Could not read watchlist.json (' + getRes.status + ')');
     const getData = await getRes.json();
     const currentContent = JSON.parse(atob(getData.content));
-
-    if (currentContent.some(e => e.key === key)) {
-      return { ok: true, reason: 'Already in watchlist.' };
-    }
+    if (currentContent.some(e => e.key === key)) return { ok: true, reason: 'Already in watchlist.' };
     currentContent.push({ key, ticker, name });
-
     const newContentB64 = btoa(JSON.stringify(currentContent, null, 2) + '\n');
     const putRes = await fetch(apiUrl, {
-      method: 'PUT',
-      headers: { ...headers, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: `Add ${name} to watchlist [from PWA]`,
-        content: newContentB64,
-        sha: getData.sha,
-      }),
+      method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: `Add ${name} to watchlist [from PWA]`, content: newContentB64, sha: getData.sha }),
     });
     if (!putRes.ok) throw new Error('Could not update watchlist.json (' + putRes.status + ')');
     return { ok: true, reason: 'Added to watchlist.' };
-  } catch (e) {
-    return { ok: false, reason: e.message };
-  }
+  } catch (e) { return { ok: false, reason: e.message }; }
 }
 
-function saveStore() {
+// ---- price auto-sync ----
+async function autoSyncAllPrices() {
+  const ids = Object.keys(store.instruments);
+  for (const id of ids) {
+    const inst = store.instruments[id];
+    if (!inst.syncKey) continue;
+    try {
+      const res = await fetch('./data/' + inst.syncKey + '.json', { cache: 'no-store' });
+      if (!res.ok) continue;
+      const data = await res.json();
+      inst.currentPrice = data.price;
+      inst.peak = data.peak;
+      inst.peakDate = data.peakDate ? data.peakDate.slice(0,10) : inst.peakDate;
+      inst.tiersHit = data.tiersHit || [];
+    } catch (e) { /* skip */ }
+  }
+  saveStoreLocal();
+  render();
+}
+
+function manualSyncActive() { autoSyncAllPrices(); }
+
+// ---- NSE search ----
+async function ensureNseSecuritiesLoaded() {
+  if (nseSecurities) return nseSecurities;
   try {
-    localStorage.setItem('dip-tracker-store', JSON.stringify(store));
-  } catch (e) {
-    alert('Could not save - your browser may be blocking local storage.');
+    const res = await fetch('./data/nse_securities.json', { cache: 'force-cache' });
+    if (!res.ok) throw new Error('not found');
+    nseSecurities = await res.json();
+  } catch (e) { nseSecurities = []; }
+  return nseSecurities;
+}
+
+async function onSearchInput() {
+  const q = document.getElementById('ob-search').value.trim().toLowerCase();
+  const resultsEl = document.getElementById('search-results');
+  if (q.length < 2) { resultsEl.classList.add('hidden'); return; }
+  const list = await ensureNseSecuritiesLoaded();
+  if (list.length === 0) {
+    resultsEl.innerHTML = '<div class="search-result-item">NSE list not loaded yet. Run the fetch_nse_list workflow once.</div>';
+    resultsEl.classList.remove('hidden');
+    return;
   }
+  const matches = list.filter(s => s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)).slice(0, 8);
+  resultsEl.innerHTML = matches.length === 0
+    ? '<div class="search-result-item">No matches.</div>'
+    : matches.map(m => `<div class="search-result-item" onclick='selectNseResult(${JSON.stringify(JSON.stringify(m))})'>` +
+        `<div class="sr-symbol">${m.symbol}</div><div class="sr-name">${m.name}</div></div>`).join('');
+  resultsEl.classList.remove('hidden');
 }
 
-function activeInstrument() {
-  if (!store.activeId) return null;
-  return store.instruments[store.activeId] || null;
+function selectNseResult(jsonStr) {
+  const m = JSON.parse(jsonStr);
+  document.getElementById('ob-name').value = m.name;
+  document.getElementById('ob-ticker').value = m.ticker;
+  document.getElementById('ob-syncKey').value = m.symbol.toLowerCase();
+  document.getElementById('ob-search').value = '';
+  document.getElementById('search-results').classList.add('hidden');
+  document.getElementById('ob-selected-name').textContent = m.name + ' (' + m.ticker + ')';
+  triggerComputeFundamentals();
 }
 
+// ---- fundamentals compute (generic progress-bar runner) ----
+async function runGithubWorkflowWithProgress(workflowFile, inputs, onProgress, onComplete) {
+  const cfg = loadGithubConfig();
+  if (!cfg) { onComplete(false, 'GitHub sync not set up yet.'); return; }
+  const headers = { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' };
+  const dispatchUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/actions/workflows/${workflowFile}/dispatches`;
+  const runsUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/actions/workflows/${workflowFile}/runs?per_page=5`;
+  const triggerTime = Date.now();
+  onProgress(10, 'Triggering...');
+  try {
+    const dispatchRes = await fetch(dispatchUrl, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ ref: 'main', inputs }) });
+    if (!dispatchRes.ok) { onComplete(false, 'Could not trigger workflow (' + dispatchRes.status + ')'); return; }
+  } catch (e) { onComplete(false, 'Network error: ' + e.message); return; }
+  onProgress(25, 'Queued...');
+  let attempts = 0;
+  const maxAttempts = 40;
+  const poll = async () => {
+    attempts++;
+    if (attempts > maxAttempts) { onComplete(false, 'Timed out.'); return; }
+    try {
+      const runsRes = await fetch(runsUrl, { headers });
+      if (runsRes.ok) {
+        const runsData = await runsRes.json();
+        const candidate = (runsData.workflow_runs || []).find(r => new Date(r.created_at).getTime() >= triggerTime - 5000);
+        if (candidate) {
+          if (candidate.status === 'in_progress') onProgress(60, 'Running...');
+          else if (candidate.status === 'queued') onProgress(35, 'Queued...');
+          else if (candidate.status === 'completed') { onProgress(100, 'Done.'); onComplete(candidate.conclusion === 'success', candidate.conclusion); return; }
+        }
+      }
+    } catch (e) {}
+    setTimeout(poll, 3000);
+  };
+  setTimeout(poll, 3000);
+}
+
+async function triggerComputeFundamentals() {
+  const ticker = document.getElementById('ob-ticker').value.trim().toUpperCase();
+  const key = document.getElementById('ob-syncKey').value.trim().toLowerCase();
+  if (!ticker || !key) return;
+
+  document.getElementById('progress-wrap').classList.remove('hidden');
+  document.getElementById('ob-compute-status').textContent = '';
+  const bar = document.getElementById('progress-bar');
+  const status = document.getElementById('progress-status');
+
+  runGithubWorkflowWithProgress('compute_fundamentals.yml', { ticker, key },
+    (pct, label) => { bar.style.width = pct + '%'; status.textContent = label; },
+    async (success, detail) => {
+      if (!success) {
+        status.textContent = 'Could not auto-compute (' + detail + '). You can still save — price will fill in once the tracker checks it.';
+        document.getElementById('ob-chunk-row').classList.remove('hidden');
+        document.getElementById('ob-save-btn').classList.remove('hidden');
+        return;
+      }
+      status.textContent = 'Fetching results...';
+      const cfg = loadGithubConfig();
+      try {
+        const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data/fundamentals/${key}.json`,
+          { headers: { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' } });
+        if (!res.ok) throw new Error('not found yet');
+        const fileData = await res.json();
+        const parsed = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+        document.getElementById('ob-price').value = parsed.currentPrice || '';
+        document.getElementById('ob-high').value = parsed.week52High || '';
+        status.textContent = `Price: Rs${parsed.currentPrice ?? '—'} · 52w High: Rs${parsed.week52High ?? '—'} · PE: ${parsed.trailingPE ?? '—'} · ROCE: ${parsed.roce ?? '—'}%`;
+      } catch (e) {
+        status.textContent = 'Computed, but could not fetch result: ' + e.message;
+      }
+      document.getElementById('ob-chunk-row').classList.remove('hidden');
+      document.getElementById('ob-save-btn').classList.remove('hidden');
+    }
+  );
+}
+
+// ---- onboarding ----
 function openOnboarding() {
+  document.getElementById('ob-search').value = '';
   document.getElementById('ob-name').value = '';
+  document.getElementById('ob-ticker').value = '';
+  document.getElementById('ob-syncKey').value = '';
   document.getElementById('ob-price').value = '';
   document.getElementById('ob-high').value = '';
-  document.getElementById('ob-balance').value = '';
-  document.getElementById('ob-inflow').value = '';
   document.getElementById('ob-chunk').value = '';
-  document.getElementById('ob-syncKey').value = '';
-  document.getElementById('ob-ticker').value = '';
+  document.getElementById('ob-selected-name').textContent = '';
+  document.getElementById('ob-compute-status').textContent = '';
+  document.getElementById('search-results').classList.add('hidden');
+  document.getElementById('progress-wrap').classList.add('hidden');
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('ob-chunk-row').classList.add('hidden');
+  document.getElementById('ob-save-btn').classList.add('hidden');
   document.getElementById('onboarding').classList.remove('hidden');
   document.getElementById('app').classList.add('hidden');
   document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('allocate-screen').classList.add('hidden');
 }
 
 function cancelOnboarding() {
@@ -442,48 +584,119 @@ function cancelOnboarding() {
 
 function finishOnboarding() {
   const name = document.getElementById('ob-name').value.trim();
-  const price = parseFloat(document.getElementById('ob-price').value);
-  const high = parseFloat(document.getElementById('ob-high').value);
-  const balance = parseFloat(document.getElementById('ob-balance').value);
-  const inflow = parseFloat(document.getElementById('ob-inflow').value);
-  const chunk = parseFloat(document.getElementById('ob-chunk').value);
-  const syncKey = document.getElementById('ob-syncKey').value.trim().toLowerCase();
   const ticker = document.getElementById('ob-ticker').value.trim().toUpperCase();
-  if (!name || !price || !high || isNaN(balance) || !inflow || !chunk) {
-    alert('Please fill in all fields.');
-    return;
-  }
+  const syncKey = document.getElementById('ob-syncKey').value.trim().toLowerCase();
+  const price = parseFloat(document.getElementById('ob-price').value) || 0;
+  const high = parseFloat(document.getElementById('ob-high').value) || price;
+  const chunk = parseFloat(document.getElementById('ob-chunk').value);
+  if (!name || !chunk) { alert('Missing name or chunk size.'); return; }
+
   const id = slugify(name);
   store.instruments[id] = {
-    name: name,
-    syncKey: syncKey || null,
-    ticker: ticker || null,
-    currentPrice: price,
-    peak: Math.max(price, high),
-    peakDate: todayISO(),
-    reserveBalance: balance,
-    monthlyInflow: inflow,
-    chunkSize: chunk,
-    liquidYieldPct: 6.5,
-    lastAccrualDate: todayISO(),
-    lastTopupDate: todayISO(),
-    tiersHit: [],
-    deployments: [],
+    name, ticker: ticker || null, syncKey: syncKey || null,
+    currentPrice: price, peak: Math.max(price, high) || price, peakDate: todayISO(),
+    allocated: 0, chunkSize: chunk, tiersHit: [], deployments: [],
   };
   store.activeId = id;
   saveStore();
+  pushStateToGithub();
   document.getElementById('onboarding').classList.add('hidden');
   render();
 
   if (syncKey && ticker) {
     pushToWatchlist(syncKey, ticker, name).then(result => {
-      if (!result.ok) {
-        alert('Instrument saved locally, but could not auto-add to GitHub watchlist: ' + result.reason + '\n\nYou can add it manually to watchlist.json instead.');
-      }
+      if (!result.ok) console.log('watchlist push failed:', result.reason);
     });
   }
 }
 
+// ---- portfolio pie + allocate ----
+function renderPortfolioOverview() {
+  const ids = Object.keys(store.instruments);
+  const el = document.getElementById('portfolio-overview');
+  if (ids.length === 0) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+
+  const total = store.totalReserve;
+  const allocatedSum = ids.reduce((s, id) => s + store.instruments[id].allocated, 0);
+  const unallocated = Math.max(0, total - allocatedSum);
+
+  const slices = ids.map((id, i) => ({ name: store.instruments[id].name, value: store.instruments[id].allocated, color: PIE_COLORS[i % PIE_COLORS.length] }));
+  slices.push({ name: 'Unallocated', value: unallocated, color: '#3A404B' });
+
+  const grandTotal = slices.reduce((s, x) => s + x.value, 0) || 1;
+  let cumPct = 0;
+  const gradientParts = slices.map(s => {
+    const startPct = cumPct;
+    cumPct += (s.value / grandTotal) * 100;
+    return `${s.color} ${startPct.toFixed(2)}% ${cumPct.toFixed(2)}%`;
+  });
+  const pieStyle = `background: conic-gradient(${gradientParts.join(', ')});`;
+
+  const legendHtml = slices.filter(s => s.value > 0).map(s =>
+    `<div class="pie-legend-item"><div class="pie-dot" style="background:${s.color}"></div><div class="pie-legend-name">${s.name}</div><div class="pie-legend-value">Rs${fmtRupee(s.value)}</div></div>`
+  ).join('');
+
+  el.innerHTML = `
+    <div class="section-title">Portfolio</div>
+    <div class="pie-wrap">
+      <div class="pie-chart" style="${pieStyle}"></div>
+      <div class="pie-legend">${legendHtml}</div>
+    </div>
+    <div style="height:14px"></div>
+    <button class="btn btn-gold" onclick="openAllocateScreen()">Allocate reserve</button>
+  `;
+}
+
+function openAllocateScreen() {
+  document.getElementById('onboarding').classList.add('hidden');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('allocate-screen').classList.remove('hidden');
+  document.getElementById('al-total').value = store.totalReserve;
+
+  const ids = Object.keys(store.instruments);
+  const rowsEl = document.getElementById('allocate-instrument-rows');
+  rowsEl.innerHTML = ids.map(id => {
+    const inst = store.instruments[id];
+    return `<div class="allocate-row">
+      <div class="al-name">${inst.name}</div>
+      <input type="number" id="al-inst-${id}" value="${inst.allocated}" oninput="updateAllocateUnallocated()">
+    </div>`;
+  }).join('');
+  updateAllocateUnallocated();
+}
+
+function updateAllocateUnallocated() {
+  const total = parseFloat(document.getElementById('al-total').value) || 0;
+  const ids = Object.keys(store.instruments);
+  let sum = 0;
+  ids.forEach(id => { sum += parseFloat(document.getElementById('al-inst-' + id).value) || 0; });
+  const unallocated = total - sum;
+  const el = document.getElementById('al-unallocated');
+  el.textContent = 'Rs' + fmtRupee(unallocated);
+  el.style.color = unallocated < 0 ? 'var(--rust)' : 'var(--text)';
+}
+
+function saveAllocations() {
+  const total = parseFloat(document.getElementById('al-total').value) || 0;
+  const ids = Object.keys(store.instruments);
+  ids.forEach(id => {
+    const val = parseFloat(document.getElementById('al-inst-' + id).value) || 0;
+    store.instruments[id].allocated = val;
+  });
+  store.totalReserve = total;
+  saveStore();
+  pushStateToGithub();
+  closeAllocateScreen();
+  render();
+}
+
+function closeAllocateScreen() {
+  document.getElementById('allocate-screen').classList.add('hidden');
+  render();
+}
+
+// ---- instrument actions ----
 function switchInstrument(id) {
   store.activeId = id;
   saveStore();
@@ -493,47 +706,29 @@ function switchInstrument(id) {
 function removeCurrentInstrument() {
   const inst = activeInstrument();
   if (!inst) return;
-  if (!confirm('Remove "' + inst.name + '" and all its history? This cannot be undone.')) return;
+  if (!confirm('Remove "' + inst.name + '" and all its history? Its allocated reserve returns to Unallocated.')) return;
   delete store.instruments[store.activeId];
   const remaining = Object.keys(store.instruments);
   store.activeId = remaining.length ? remaining[0] : null;
-  saveStore();
+  saveStore(); pushStateToGithub();
   document.getElementById('settings-panel').classList.add('hidden');
   render();
 }
 
-function accrueLiquidFund(inst) {
-  const days = daysBetween(inst.lastAccrualDate, todayISO());
+function accrueLiquidFund() {
+  const days = daysBetween(store.lastAccrualDate, todayISO());
   if (days <= 0) return;
-  const dailyRate = Math.pow(1 + inst.liquidYieldPct/100, 1/365) - 1;
-  inst.reserveBalance = inst.reserveBalance * Math.pow(1 + dailyRate, days);
-  inst.lastAccrualDate = todayISO();
+  const dailyRate = Math.pow(1 + store.liquidYieldPct/100, 1/365) - 1;
+  store.totalReserve = store.totalReserve * Math.pow(1 + dailyRate, days);
+  store.lastAccrualDate = todayISO();
 }
 
-function checkTopupDue(inst) {
-  return daysBetween(inst.lastTopupDate, todayISO()) >= 30;
-}
+function checkTopupDue() { return daysBetween(store.lastTopupDate, todayISO()) >= 30; }
 
-function logTopup() {
-  const inst = activeInstrument();
-  inst.reserveBalance += inst.monthlyInflow;
-  inst.lastTopupDate = todayISO();
-  saveStore();
-  render();
-}
-
-function updatePrice() {
-  const inst = activeInstrument();
-  const val = parseFloat(document.getElementById('new-price').value);
-  if (!val || !inst) return;
-  inst.currentPrice = val;
-  if (val >= inst.peak) {
-    inst.peak = val;
-    inst.peakDate = todayISO();
-    inst.tiersHit = [];
-  }
-  saveStore();
-  document.getElementById('new-price').value = '';
+function logGlobalTopup() {
+  store.totalReserve += store.monthlyInflow;
+  store.lastTopupDate = todayISO();
+  saveStore(); pushStateToGithub();
   render();
 }
 
@@ -542,44 +737,21 @@ function currentDrawdownPct(inst) {
   return Math.max(0, (inst.peak - inst.currentPrice) / inst.peak * 100);
 }
 
-async function syncFromGithub() {
-  const inst = activeInstrument();
-  if (!inst || !inst.syncKey) return;
-  const statusEl = document.getElementById('sync-status');
-  statusEl.textContent = 'Syncing...';
-  try {
-    const res = await fetch('./data/' + inst.syncKey + '.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error('File not found (' + res.status + ')');
-    const data = await res.json();
-    inst.currentPrice = data.price;
-    inst.peak = data.peak;
-    inst.peakDate = data.peakDate ? data.peakDate.slice(0,10) : inst.peakDate;
-    inst.tiersHit = data.tiersHit || [];
-    saveStore();
-    const checkedTime = data.lastChecked ? new Date(data.lastChecked).toLocaleString('en-IN') : 'unknown time';
-    statusEl.textContent = 'Synced — last checked ' + checkedTime;
-    render();
-  } catch (e) {
-    statusEl.textContent = 'Sync failed: ' + e.message + '. Enter price manually below instead.';
-  }
-}
-
 function nextUntriggeredTier(inst) {
   const dd = currentDrawdownPct(inst);
-  for (const t of TIERS) {
-    if (dd >= t && !inst.tiersHit.includes(t)) return t;
-  }
+  for (const t of TIERS) { if (dd >= t && !inst.tiersHit.includes(t)) return t; }
   return null;
 }
 
 function logDeployment(tier) {
   const inst = activeInstrument();
-  const amount = Math.min(inst.chunkSize, inst.reserveBalance);
-  if (amount <= 0) { alert('Reserve balance is empty.'); return; }
-  inst.reserveBalance -= amount;
+  const amount = Math.min(inst.chunkSize, inst.allocated);
+  if (amount <= 0) { alert('No funds allocated to this instrument. Use Allocate on the home page first.'); return; }
+  inst.allocated -= amount;
+  store.totalReserve -= amount;
   inst.tiersHit.push(tier);
-  inst.deployments.unshift({ date: todayISO(), tier: tier, amount: amount, price: inst.currentPrice });
-  saveStore();
+  inst.deployments.unshift({ date: todayISO(), tier, amount, price: inst.currentPrice });
+  saveStore(); pushStateToGithub();
   render();
 }
 
@@ -588,169 +760,132 @@ function toggleSettings() {
   panel.classList.toggle('hidden');
   if (!panel.classList.contains('hidden')) {
     const inst = activeInstrument();
-    document.getElementById('set-inflow').value = inst.monthlyInflow;
     document.getElementById('set-chunk').value = inst.chunkSize;
-    document.getElementById('set-yield').value = inst.liquidYieldPct;
     document.getElementById('set-syncKey').value = inst.syncKey || '';
   }
 }
 
 function saveSettings() {
   const inst = activeInstrument();
-  inst.monthlyInflow = parseFloat(document.getElementById('set-inflow').value) || inst.monthlyInflow;
   inst.chunkSize = parseFloat(document.getElementById('set-chunk').value) || inst.chunkSize;
-  inst.liquidYieldPct = parseFloat(document.getElementById('set-yield').value) || inst.liquidYieldPct;
-  const newSyncKey = document.getElementById('set-syncKey').value.trim().toLowerCase();
-  inst.syncKey = newSyncKey || null;
-  saveStore();
-  toggleSettings();
-  render();
+  inst.syncKey = document.getElementById('set-syncKey').value.trim().toLowerCase() || null;
+  saveStore(); pushStateToGithub();
+  toggleSettings(); render();
 }
 
-function renderTabs() {
-  const ids = Object.keys(store.instruments);
-  const container = document.getElementById('tabs-container');
-  if (ids.length === 0) {
-    container.classList.add('hidden');
-    return;
-  }
-  container.classList.remove('hidden');
-  container.innerHTML = ids.map(id => {
-    const inst = store.instruments[id];
-    const active = id === store.activeId ? 'active' : '';
-    return '<div class="tab ' + active + '" onclick="switchInstrument(\'' + id + '\')">' + inst.name + '</div>';
-  }).join('') + '<div class="tab add-tab" onclick="openOnboarding()">+ Add</div>';
-}
-
+// ---- gauge ----
 function renderGauge(inst, dd) {
   const shaft = document.getElementById('gauge-shaft');
   shaft.innerHTML = '';
   const maxPct = 40;
   const fillPct = Math.min(dd, maxPct) / maxPct * 100;
-
   const fill = document.createElement('div');
-  fill.className = 'gauge-fill';
-  fill.style.height = fillPct + '%';
+  fill.className = 'gauge-fill'; fill.style.height = fillPct + '%';
   shaft.appendChild(fill);
-
   TIERS.forEach(t => {
     const tick = document.createElement('div');
-    tick.className = 'gauge-tick';
-    tick.style.top = (t/maxPct*100) + '%';
+    tick.className = 'gauge-tick'; tick.style.top = (t/maxPct*100) + '%';
     shaft.appendChild(tick);
     if (inst.tiersHit.includes(t)) {
       const hit = document.createElement('div');
-      hit.className = 'gauge-hit';
-      hit.style.top = (t/maxPct*100) + '%';
+      hit.className = 'gauge-hit'; hit.style.top = (t/maxPct*100) + '%';
       shaft.appendChild(hit);
     }
   });
-
   const marker = document.createElement('div');
-  marker.className = 'gauge-marker';
-  marker.style.top = fillPct + '%';
+  marker.className = 'gauge-marker'; marker.style.top = fillPct + '%';
   shaft.appendChild(marker);
 }
 
-function render() {
-  renderTabs();
-  const inst = activeInstrument();
+function renderTabs() {
+  const ids = Object.keys(store.instruments);
+  const container = document.getElementById('tabs-container');
+  if (ids.length === 0) { container.classList.add('hidden'); return; }
+  container.classList.remove('hidden');
+  container.innerHTML = ids.map(id => {
+    const inst = store.instruments[id];
+    const active = id === store.activeId ? 'active' : '';
+    return `<div class="tab ${active}" onclick="switchInstrument('${id}')">${inst.name}</div>`;
+  }).join('') + `<div class="tab add-tab" onclick="openOnboarding()">+ Add</div>`;
+}
 
-  if (!inst) {
-    document.getElementById('empty-state').classList.remove('hidden');
-    document.getElementById('onboarding').classList.add('hidden');
+// ---- main render ----
+function render() {
+  accrueLiquidFund();
+  saveStoreLocal();
+
+  renderPortfolioOverview();
+  renderTabs();
+
+  const inst = activeInstrument();
+  const allocateOpen = !document.getElementById('allocate-screen').classList.contains('hidden');
+  const onboardingOpen = !document.getElementById('onboarding').classList.contains('hidden');
+
+  if (!inst || allocateOpen || onboardingOpen) {
+    if (!allocateOpen && !onboardingOpen) {
+      document.getElementById('empty-state').classList.toggle('hidden', Object.keys(store.instruments).length > 0);
+    } else {
+      document.getElementById('empty-state').classList.add('hidden');
+    }
     document.getElementById('app').classList.add('hidden');
     document.getElementById('page-title').textContent = 'ETF Tracker';
     return;
   }
 
   document.getElementById('empty-state').classList.add('hidden');
-  document.getElementById('onboarding').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
   document.getElementById('page-title').textContent = inst.name;
 
-  accrueLiquidFund(inst);
-  saveStore();
-
   const dd = currentDrawdownPct(inst);
-  document.getElementById('cur-price').textContent = inst.currentPrice.toFixed(2);
-  document.getElementById('peak-price').textContent = 'Rs' + inst.peak.toFixed(2);
-  document.getElementById('peak-date').textContent = '(' + inst.peakDate + ')';
+  document.getElementById('cur-price').textContent = inst.currentPrice ? inst.currentPrice.toFixed(2) : '-';
+  document.getElementById('peak-price').textContent = inst.peak ? ('Rs' + inst.peak.toFixed(2)) : '-';
+  document.getElementById('peak-date').textContent = inst.peakDate ? ('(' + inst.peakDate + ')') : '';
 
   const pill = document.getElementById('dd-pill');
-  if (dd < 3) {
-    pill.className = 'dd-pill dd-calm';
-    pill.textContent = dd < 0.5 ? 'At or near peak' : ('Down ' + dd.toFixed(1) + '% from peak');
-  } else {
-    pill.className = 'dd-pill dd-active';
-    pill.textContent = 'Down ' + dd.toFixed(1) + '% from peak';
-  }
+  if (dd < 3) { pill.className = 'dd-pill dd-calm'; pill.textContent = dd < 0.5 ? 'At or near peak' : ('Down ' + dd.toFixed(1) + '% from peak'); }
+  else { pill.className = 'dd-pill dd-active'; pill.textContent = 'Down ' + dd.toFixed(1) + '% from peak'; }
 
   renderGauge(inst, dd);
-
-  const syncRow = document.getElementById('sync-row');
-  if (inst.syncKey) {
-    syncRow.classList.remove('hidden');
-    document.getElementById('sync-status').textContent = '';
-  } else {
-    syncRow.classList.add('hidden');
-  }
+  document.getElementById('sync-row').classList.toggle('hidden', !inst.syncKey);
 
   const banner = document.getElementById('topup-banner');
-  if (checkTopupDue(inst)) {
+  if (checkTopupDue()) {
     banner.classList.remove('hidden');
-    document.getElementById('topup-text').textContent =
-      'Monthly top-up of Rs' + fmtRupee(inst.monthlyInflow) + ' is due for ' + inst.name;
-  } else {
-    banner.classList.add('hidden');
-  }
+    document.getElementById('topup-text').textContent = 'Monthly top-up of Rs' + fmtRupee(store.monthlyInflow) + ' is due';
+  } else banner.classList.add('hidden');
 
   const tier = nextUntriggeredTier(inst);
   const actionEl = document.getElementById('action-section');
   if (tier !== null) {
-    const amount = Math.min(inst.chunkSize, inst.reserveBalance);
-    actionEl.innerHTML =
-      '<div class="card action-card">' +
-        '<div class="tier-badge">TIER TRIGGERED - ' + tier + '% FROM PEAK</div>' +
-        '<div class="section-title" style="margin-bottom:2px;">Deploy now</div>' +
-        '<div class="action-amount">Rs' + fmtRupee(amount) + ' <span>from reserve</span></div>' +
-        '<button class="btn btn-gold" onclick="logDeployment(' + tier + ')">Log this deployment</button>' +
-      '</div>';
+    const amount = Math.min(inst.chunkSize, inst.allocated);
+    actionEl.innerHTML = `<div class="card action-card">
+      <div class="tier-badge">TIER TRIGGERED - ${tier}% FROM PEAK</div>
+      <div class="section-title" style="margin-bottom:2px;">Deploy now</div>
+      <div class="action-amount">Rs${fmtRupee(amount)} <span>from allocated reserve</span></div>
+      <button class="btn btn-gold" onclick="logDeployment(${tier})">Log this deployment</button>
+    </div>`;
   } else {
-    actionEl.innerHTML =
-      '<div class="card">' +
-        '<div class="section-title" style="margin-bottom:4px;">No tier triggered</div>' +
-        '<div class="note" style="margin-top:0;">Within 5% of peak, or every tier reached so far has already been deployed. Nothing to do - keep the reserve building.</div>' +
-      '</div>';
+    actionEl.innerHTML = `<div class="card">
+      <div class="section-title" style="margin-bottom:4px;">No tier triggered</div>
+      <div class="note" style="margin-top:0;">Within 5% of peak, or every tier reached so far has already been deployed.</div>
+    </div>`;
   }
 
-  document.getElementById('reserve-balance').textContent = 'Rs' + fmtRupee(inst.reserveBalance);
+  document.getElementById('allocated-display').textContent = 'Rs' + fmtRupee(inst.allocated);
   document.getElementById('chunk-display').textContent = 'Rs' + fmtRupee(inst.chunkSize);
-  document.getElementById('liquid-note').textContent =
-    'Growing at ~' + inst.liquidYieldPct + '% p.a. in your liquid fund, plus Rs' + fmtRupee(inst.monthlyInflow) + '/month top-ups.';
 
   const logEl = document.getElementById('deploy-log');
-  if (inst.deployments.length === 0) {
-    logEl.innerHTML = '<div class="log-empty">No deployments logged yet.</div>';
-  } else {
-    logEl.innerHTML = inst.deployments.map(d =>
-      '<div class="log-item">' +
-        '<div>' +
-          '<div>-' + d.tier + '% tier</div>' +
-          '<div class="log-date">' + d.date + ' - Rs' + d.price.toFixed(2) + '</div>' +
-        '</div>' +
-        '<div class="log-amount">Rs' + fmtRupee(d.amount) + '</div>' +
-      '</div>'
-    ).join('');
-  }
+  logEl.innerHTML = inst.deployments.length === 0
+    ? '<div class="log-empty">No deployments logged yet.</div>'
+    : inst.deployments.map(d => `<div class="log-item"><div><div>-${d.tier}% tier</div>
+        <div class="log-date">${d.date} - Rs${d.price.toFixed(2)}</div></div>
+        <div class="log-amount">Rs${fmtRupee(d.amount)}</div></div>`).join('');
 }
 
 loadStore();
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
+  window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
 }
 </script>
 </body>
