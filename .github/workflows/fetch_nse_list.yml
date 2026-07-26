@@ -1,0 +1,30 @@
+name: Refresh NSE Securities List
+
+on:
+  workflow_dispatch: {}   # manual trigger only -- run this every couple of months
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-list:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch NSE securities list
+        run: python scripts/fetch_nse_list.py
+
+      - name: Commit updated list
+        run: |
+          git config user.name "dip-tracker-bot"
+          git config user.email "actions@github.com"
+          git add data/nse_securities.json
+          git diff --quiet --cached || git commit -m "Refresh NSE securities list [manual]"
+          git push
