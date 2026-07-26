@@ -452,16 +452,20 @@ async function ensureNseSecuritiesLoaded() {
 }
 
 async function onSearchInput() {
-  const q = document.getElementById('ob-search').value.trim().toLowerCase();
+  const raw = document.getElementById('ob-search').value.trim().toLowerCase();
+  const q = raw.replace(/\s+/g, ''); // space-insensitive matching
   const resultsEl = document.getElementById('search-results');
-  if (q.length < 2) { resultsEl.classList.add('hidden'); return; }
+  if (raw.length < 2) { resultsEl.classList.add('hidden'); return; }
   const list = await ensureNseSecuritiesLoaded();
   if (list.length === 0) {
     resultsEl.innerHTML = '<div class="search-result-item">NSE list not loaded yet. Run the fetch_nse_list workflow once.</div>';
     resultsEl.classList.remove('hidden');
     return;
   }
-  const matches = list.filter(s => s.symbol.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)).slice(0, 8);
+  const matches = list.filter(s => {
+    const blob = (s.search_blob || (s.symbol + ' ' + s.name)).toLowerCase().replace(/\s+/g, '');
+    return blob.includes(q);
+  }).slice(0, 8);
   resultsEl.innerHTML = matches.length === 0
     ? '<div class="search-result-item">No matches.</div>'
     : matches.map(m => `<div class="search-result-item" onclick='selectNseResult(${JSON.stringify(JSON.stringify(m))})'>` +
