@@ -17,6 +17,9 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Network-first for the HTML page itself, so you always get the latest version
+// when online, and only fall back to the cached copy when offline.
+// Cache-first for static assets (icons, manifest) that rarely change.
 self.addEventListener('fetch', (event) => {
   const isHTML = event.request.mode === 'navigate' || event.request.url.endsWith('.html');
 
