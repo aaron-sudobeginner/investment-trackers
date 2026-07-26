@@ -13,7 +13,7 @@
       "peak": 0,
       "peakDate": "2026-07-26",
       "allocated": 20000,
-      "chunkSize": 3000,
+      "chunkSize": 5000,
       "tiersHit": [],
       "deployments": []
     }
