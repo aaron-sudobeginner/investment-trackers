@@ -1,0 +1,22 @@
+{
+  "totalReserve": 0,
+  "monthlyInflow": 6000,
+  "liquidYieldPct": 6.5,
+  "lastAccrualDate": "2026-07-26",
+  "lastTopupDate": "2026-07-26",
+  "instruments": {
+    "nifty50-ms24htgq": {
+      "name": "Nifty50",
+      "ticker": "NIFTYBEES.NS",
+      "syncKey": "niftybees",
+      "currentPrice": 0,
+      "peak": 0,
+      "peakDate": "2026-07-26",
+      "allocated": 0,
+      "chunkSize": 3000,
+      "tiersHit": [],
+      "deployments": []
+    }
+  },
+  "activeId": "nifty50-ms24htgq"
+}
