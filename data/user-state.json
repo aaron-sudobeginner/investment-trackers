@@ -12,7 +12,7 @@
       "currentPrice": 0,
       "peak": 0,
       "peakDate": "2026-07-26",
-      "allocated": 0,
+      "allocated": 20000,
       "chunkSize": 3000,
       "tiersHit": [],
       "deployments": []
