@@ -17,17 +17,47 @@ ETF_URL = "https://nsearchives.nseindia.com/content/equities/eq_etfseclist.csv"
 OUTPUT_FILE = "data/nse_securities.json"
 
 
-def fetch_csv_list(url, kind):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+def fetch_equity_list():
+    req = urllib.request.Request(EQUITY_URL, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         raw = resp.read().decode("utf-8", errors="replace")
     reader = csv.DictReader(io.StringIO(raw))
     securities = []
     for row in reader:
         symbol = (row.get("SYMBOL") or "").strip()
-        name = (row.get("NAME OF COMPANY") or row.get("Underlying") or row.get("SECURITY NAME") or "").strip()
+        name = (row.get("NAME OF COMPANY") or "").strip()
         if symbol and name:
-            securities.append({"symbol": symbol, "name": name, "ticker": f"{symbol}.NS", "type": kind})
+            securities.append({
+                "symbol": symbol, "name": name, "ticker": f"{symbol}.NS", "type": "equity",
+                "search_blob": f"{symbol} {name}".lower(),
+            })
+    return securities
+
+
+def fetch_etf_list():
+    # NSE's ETF file uses DIFFERENT column names than the equity file:
+    # Symbol, Underlying, SecurityName, DateofListing, MarketLot, ISINNumber, FaceValue
+    req = urllib.request.Request(ETF_URL, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        raw = resp.read().decode("utf-8", errors="replace")
+    reader = csv.DictReader(io.StringIO(raw))
+    securities = []
+    for row in reader:
+        symbol = (row.get("Symbol") or "").strip()
+        underlying = (row.get("Underlying") or "").strip()
+        security_name = (row.get("SecurityName") or "").strip()
+        if not symbol:
+            continue
+        # NSE's ETF names are inconsistent -- sometimes Underlying is a readable
+        # name, sometimes SecurityName is, sometimes both are smushed together
+        # with no spaces. Prefer whichever looks most like readable words for
+        # display, but combine everything into search_blob so search still finds
+        # it regardless of which field actually has useful text.
+        display_name = underlying if " " in underlying else (security_name if " " in security_name else (underlying or security_name or symbol))
+        securities.append({
+            "symbol": symbol, "name": display_name, "ticker": f"{symbol}.NS", "type": "etf",
+            "search_blob": f"{symbol} {underlying} {security_name}".lower(),
+        })
     return securities
 
 
@@ -35,20 +65,19 @@ def main():
     all_securities = []
 
     try:
-        equities = fetch_csv_list(EQUITY_URL, "equity")
+        equities = fetch_equity_list()
         print(f"Fetched {len(equities)} equities from NSE.")
         all_securities.extend(equities)
     except Exception as e:
         print(f"WARNING: could not fetch equities list: {e}")
 
     try:
-        etfs = fetch_csv_list(ETF_URL, "etf")
+        etfs = fetch_etf_list()
         print(f"Fetched {len(etfs)} ETFs from NSE.")
         all_securities.extend(etfs)
     except Exception as e:
         print(f"WARNING: could not fetch ETF list: {e}")
 
-    # de-duplicate by symbol, in case of overlap
     seen = set()
     deduped = []
     for s in all_securities:
