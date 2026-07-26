@@ -30,10 +30,10 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: python scripts/check_price.py
 
-      - name: Commit updated data file
+      - name: Commit updated data files
         run: |
           git config user.name "dip-tracker-bot"
           git config user.email "actions@github.com"
-          git add data/niftybees.json
+          git add data/
           git diff --quiet --cached || git commit -m "Update price data [automated]"
           git push
