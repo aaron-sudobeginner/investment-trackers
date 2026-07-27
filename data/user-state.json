@@ -1,9 +1,9 @@
 {
-  "totalReserve": 30005.176457433805,
+  "totalReserve": 36005.1764574338,
   "monthlyInflow": 6000,
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-07-27",
-  "lastTopupDate": "2026-07-26",
+  "lastTopupDate": "2026-07-27",
   "instruments": {
     "hdfc-bank-limited-ms2ob28g": {
       "name": "HDFC Bank Limited",
