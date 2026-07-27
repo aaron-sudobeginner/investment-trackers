@@ -4,19 +4,6 @@
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-07-27",
   "lastTopupDate": "2026-07-27",
-  "instruments": {
-    "gold-ms384w4u": {
-      "name": "Gold",
-      "ticker": "HDFCGOLD.NS",
-      "syncKey": "hdfcgold",
-      "currentPrice": 0,
-      "peak": 0,
-      "peakDate": "2026-07-27",
-      "allocated": 0,
-      "chunkSize": 1000,
-      "tiersHit": [],
-      "deployments": []
-    }
-  },
-  "activeId": "gold-ms384w4u"
+  "instruments": {},
+  "activeId": null
 }
