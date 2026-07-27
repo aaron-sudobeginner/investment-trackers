@@ -3,5 +3,10 @@
     "key": "niftybees",
     "ticker": "NIFTYBEES.NS",
     "name": "Nifty BeES"
+  },
+  {
+    "key": "hdfcbank",
+    "ticker": "HDFCBANK.NS",
+    "name": "HDFC Bank Limited"
   }
 ]
