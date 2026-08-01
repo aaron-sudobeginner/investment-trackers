@@ -124,6 +124,7 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
     <div class="input-row"><label>Repository name</label><input type="text" id="gh-repo" placeholder="nifty-toolkit"></div>
     <div class="input-row"><label>Fine-grained personal access token</label><input type="password" id="gh-token" placeholder="github_pat_..."></div>
     <button class="btn btn-gold" onclick="saveGithubConfig()">Save</button>
+    <button class="btn btn-ghost" style="margin-top:8px;" onclick="testGithubConnection()">Test connection</button>
     <div class="note" id="gh-status"></div>
   </div>
 
@@ -346,6 +347,46 @@ function saveGithubConfig() {
   document.getElementById('gh-status').textContent = 'Saved.';
 }
 
+async function testGithubConnection() {
+  const statusEl = document.getElementById('gh-status');
+  statusEl.textContent = 'Testing...';
+
+  const cfg = loadGithubConfig();
+  if (!cfg) {
+    statusEl.textContent = 'FAILED: loadGithubConfig() returned nothing. localStorage does not have a saved config on this device/browser. Tap Save above first.';
+    return;
+  }
+  if (!cfg.owner || !cfg.repo || !cfg.token) {
+    statusEl.textContent = 'FAILED: config exists but is incomplete. owner=' + (cfg.owner||'(empty)') + ' repo=' + (cfg.repo||'(empty)') + ' token=' + (cfg.token ? '(present, ' + cfg.token.length + ' chars)' : '(empty)');
+    return;
+  }
+
+  try {
+    const repoRes = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}`, {
+      headers: { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' },
+    });
+    if (!repoRes.ok) {
+      const body = await repoRes.text();
+      statusEl.textContent = `FAILED: repo check returned ${repoRes.status}. ${repoRes.status === 404 ? 'Repo not found -- check owner/repo spelling.' : repoRes.status === 401 ? 'Token invalid or expired.' : ''} Details: ${body.slice(0,200)}`;
+      return;
+    }
+
+    const actionsRes = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/actions/workflows`, {
+      headers: { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' },
+    });
+    if (!actionsRes.ok) {
+      const body = await actionsRes.text();
+      statusEl.textContent = `Repo OK, but Actions check failed (${actionsRes.status}). Your token likely doesn't have "Actions: Read and write" permission. Details: ${body.slice(0,200)}`;
+      return;
+    }
+    const actionsData = await actionsRes.json();
+    const workflowNames = (actionsData.workflows || []).map(w => w.path.split('/').pop());
+    statusEl.textContent = `SUCCESS. Connected to ${cfg.owner}/${cfg.repo}. Found ${workflowNames.length} workflow(s): ${workflowNames.join(', ')}`;
+  } catch (e) {
+    statusEl.textContent = 'FAILED: network error - ' + e.message;
+  }
+}
+
 function toggleGlobalSettings() {
   const panel = document.getElementById('global-settings-panel');
   panel.classList.toggle('hidden');
@@ -444,7 +485,7 @@ function manualSyncActive() { autoSyncAllPrices(); }
 async function ensureNseSecuritiesLoaded() {
   if (nseSecurities) return nseSecurities;
   try {
-    const res = await fetch('./data/nse_securities.json', { cache: 'force-cache' });
+    const res = await fetch('./data/nse_securities.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('not found');
     nseSecurities = await res.json();
   } catch (e) { nseSecurities = []; }
