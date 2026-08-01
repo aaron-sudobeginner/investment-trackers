@@ -58,13 +58,14 @@ def main():
     earnings_growth = info.get("earningsGrowth")
     current_price = info.get("currentPrice") or info.get("regularMarketPrice")
 
-    # 52-week high/low from 1 year of history
-    week52_high, week52_low = None, None
+    # 52-week high/low from 1 year of history, plus the actual date of the high
+    week52_high, week52_low, week52_high_date = None, None, None
     try:
         hist = t.history(period="1y")
         if not hist.empty:
             week52_high = round(float(hist["High"].max()), 2)
             week52_low = round(float(hist["Low"].min()), 2)
+            week52_high_date = hist["High"].idxmax().strftime("%Y-%m-%d")
     except Exception as e:
         print(f"Could not fetch 52w history: {e}")
 
@@ -96,6 +97,7 @@ def main():
         "roce": roce,
         "week52High": week52_high,
         "week52Low": week52_low,
+        "week52HighDate": week52_high_date,
         "computedAt": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
     }
 
