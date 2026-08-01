@@ -178,6 +178,7 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
     <input type="hidden" id="ob-syncKey">
     <input type="hidden" id="ob-price">
     <input type="hidden" id="ob-high">
+    <input type="hidden" id="ob-highDate">
 
     <button class="btn btn-gold hidden" id="ob-save-btn" onclick="finishOnboarding()">Save instrument</button>
     <button class="btn btn-ghost" style="margin-top:8px;" onclick="cancelOnboarding()">Cancel</button>
@@ -590,7 +591,8 @@ async function triggerComputeFundamentals() {
         const parsed = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
         document.getElementById('ob-price').value = parsed.currentPrice || '';
         document.getElementById('ob-high').value = parsed.week52High || '';
-        status.textContent = `Price: Rs${parsed.currentPrice ?? '—'} · 52w High: Rs${parsed.week52High ?? '—'} · PE: ${parsed.trailingPE ?? '—'} · ROCE: ${parsed.roce ?? '—'}%`;
+        document.getElementById('ob-highDate').value = parsed.week52HighDate || '';
+        status.textContent = `Price: Rs${parsed.currentPrice ?? '—'} · 52w High: Rs${parsed.week52High ?? '—'} (${parsed.week52HighDate ?? 'date unknown'}) · PE: ${parsed.trailingPE ?? '—'} · ROCE: ${parsed.roce ?? '—'}%`;
       } catch (e) {
         status.textContent = 'Computed, but could not fetch result: ' + e.message;
       }
@@ -608,6 +610,7 @@ function openOnboarding() {
   document.getElementById('ob-syncKey').value = '';
   document.getElementById('ob-price').value = '';
   document.getElementById('ob-high').value = '';
+  document.getElementById('ob-highDate').value = '';
   document.getElementById('ob-chunk').value = '';
   document.getElementById('ob-selected-name').textContent = '';
   document.getElementById('ob-compute-status').textContent = '';
@@ -633,13 +636,15 @@ function finishOnboarding() {
   const syncKey = document.getElementById('ob-syncKey').value.trim().toLowerCase();
   const price = parseFloat(document.getElementById('ob-price').value) || 0;
   const high = parseFloat(document.getElementById('ob-high').value) || price;
+  const highDate = document.getElementById('ob-highDate').value.trim();
   const chunk = parseFloat(document.getElementById('ob-chunk').value);
   if (!name || !chunk) { alert('Missing name or chunk size.'); return; }
 
   const id = slugify(name);
   store.instruments[id] = {
     name, ticker: ticker || null, syncKey: syncKey || null,
-    currentPrice: price, peak: Math.max(price, high) || price, peakDate: todayISO(),
+    currentPrice: price, peak: Math.max(price, high) || price,
+    peakDate: (high > price && highDate) ? highDate : todayISO(),
     allocated: 0, chunkSize: chunk, tiersHit: [], deployments: [],
   };
   store.activeId = id;
