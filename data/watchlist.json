@@ -8,5 +8,10 @@
     "key": "hdfcbank",
     "ticker": "HDFCBANK.NS",
     "name": "HDFC Bank Limited"
+  },
+  {
+    "key": "hdfcgold",
+    "ticker": "HDFCGOLD.NS",
+    "name": "Gold"
   }
 ]
