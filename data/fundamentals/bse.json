@@ -1,0 +1,14 @@
+{
+  "ticker": "BSE.NS",
+  "key": "bse",
+  "currentPrice": 3646.2,
+  "trailingPE": 60.608376,
+  "forwardPE": 37.64561,
+  "roe": 0.36003,
+  "peg": 0.95,
+  "roce": 40.85,
+  "week52High": 4435.12,
+  "week52Low": 2016.19,
+  "week52HighDate": "2026-05-27",
+  "computedAt": "2026-08-02T10:58:13.120686+00:00"
+}
