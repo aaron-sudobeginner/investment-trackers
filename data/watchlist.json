@@ -13,5 +13,10 @@
     "key": "hdfcgold",
     "ticker": "HDFCGOLD.NS",
     "name": "Gold"
+  },
+  {
+    "key": "mrf",
+    "ticker": "MRF.NS",
+    "name": "MRF Limited"
   }
 ]
