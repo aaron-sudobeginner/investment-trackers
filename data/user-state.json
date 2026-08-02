@@ -1,9 +1,9 @@
 {
-  "totalReserve": 30031.072145541384,
+  "totalReserve": 36031.07214554139,
   "monthlyInflow": 6000,
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-08-02",
-  "lastTopupDate": "2026-07-27",
+  "lastTopupDate": "2026-08-02",
   "instruments": {
     "mrf-limited-msb9nyi8": {
       "name": "MRF Limited",
