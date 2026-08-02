@@ -1,0 +1,14 @@
+{
+  "ticker": "MRF.NS",
+  "key": "mrf",
+  "currentPrice": 132770.0,
+  "trailingPE": 23.201843,
+  "forwardPE": 16.100594,
+  "roe": 0.12258001,
+  "peg": 0.62,
+  "roce": 15.61,
+  "week52High": 163308.49,
+  "week52Low": 121787.44,
+  "week52HighDate": "2025-10-24",
+  "computedAt": "2026-08-02T03:43:11.437413+00:00"
+}
