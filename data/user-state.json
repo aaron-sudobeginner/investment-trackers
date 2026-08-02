@@ -4,19 +4,6 @@
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-08-02",
   "lastTopupDate": "2026-07-27",
-  "instruments": {
-    "gold-msb96do0": {
-      "name": "Gold",
-      "ticker": "HDFCGOLD.NS",
-      "syncKey": "hdfcgold",
-      "currentPrice": 121.02,
-      "peak": 152.3,
-      "peakDate": "2026-01-29",
-      "allocated": 0,
-      "chunkSize": 5000,
-      "tiersHit": [],
-      "deployments": []
-    }
-  },
-  "activeId": "gold-msb96do0"
+  "instruments": {},
+  "activeId": null
 }
