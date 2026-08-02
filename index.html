@@ -179,6 +179,9 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
     <input type="hidden" id="ob-price">
     <input type="hidden" id="ob-high">
     <input type="hidden" id="ob-highDate">
+    <input type="hidden" id="ob-pe">
+    <input type="hidden" id="ob-roce">
+    <input type="hidden" id="ob-week52low">
 
     <button class="btn btn-gold hidden" id="ob-save-btn" onclick="finishOnboarding()">Save instrument</button>
     <button class="btn btn-ghost" style="margin-top:8px;" onclick="cancelOnboarding()">Cancel</button>
@@ -226,6 +229,39 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
         </div>
       </div>
       <div class="note">To change how much is allocated here, use the Allocate screen on the home page.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Fundamentals</div>
+      <div class="grid-2">
+        <div class="stat-block">
+          <div class="stat-label">PE</div>
+          <div class="stat-value" id="fund-pe">-</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">ROCE</div>
+          <div class="stat-value" id="fund-roce">-</div>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+      <div class="grid-2">
+        <div class="stat-block">
+          <div class="stat-label">52w Low</div>
+          <div class="stat-value" id="fund-week52low">-</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Last updated</div>
+          <div class="stat-value" id="fund-updated" style="font-size:13px;">-</div>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+      <button class="btn btn-ghost" onclick="recomputeInstrumentFundamentals()">↻ Recompute fundamentals</button>
+      <div id="inst-progress-wrap" class="hidden" style="margin-top:10px;">
+        <div style="background:var(--panel-raised); border-radius:6px; height:6px; overflow:hidden;">
+          <div id="inst-progress-bar" style="height:100%; width:0%; background:var(--gold); transition:width 0.4s;"></div>
+        </div>
+        <div class="note" id="inst-progress-status" style="margin-top:6px;"></div>
+      </div>
     </div>
 
     <div class="card">
@@ -562,6 +598,45 @@ async function runGithubWorkflowWithProgress(workflowFile, inputs, onProgress, o
   setTimeout(poll, 3000);
 }
 
+async function recomputeInstrumentFundamentals() {
+  const inst = activeInstrument();
+  if (!inst || !inst.ticker || !inst.syncKey) {
+    alert('This instrument has no ticker/sync key set, so fundamentals can\'t be computed. Add them in Settings first.');
+    return;
+  }
+  document.getElementById('inst-progress-wrap').classList.remove('hidden');
+  const bar = document.getElementById('inst-progress-bar');
+  const status = document.getElementById('inst-progress-status');
+
+  runGithubWorkflowWithProgress('compute_fundamentals.yml', { ticker: inst.ticker, key: inst.syncKey },
+    (pct, label) => { bar.style.width = pct + '%'; status.textContent = label; },
+    async (success, detail) => {
+      if (!success) {
+        status.textContent = 'Failed: ' + detail;
+        return;
+      }
+      status.textContent = 'Fetching results...';
+      const cfg = loadGithubConfig();
+      try {
+        const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data/fundamentals/${inst.syncKey}.json`,
+          { headers: { 'Authorization': `token ${cfg.token}`, 'Accept': 'application/vnd.github+json' } });
+        if (!res.ok) throw new Error('not found yet');
+        const fileData = await res.json();
+        const parsed = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+        inst.trailingPE = parsed.trailingPE || null;
+        inst.roce = parsed.roce || null;
+        inst.week52Low = parsed.week52Low || null;
+        inst.fundamentalsUpdatedAt = todayISO();
+        saveStore(); pushStateToGithub();
+        status.textContent = 'Updated.';
+        render();
+      } catch (e) {
+        status.textContent = 'Computed, but could not fetch result: ' + e.message;
+      }
+    }
+  );
+}
+
 async function triggerComputeFundamentals() {
   const ticker = document.getElementById('ob-ticker').value.trim().toUpperCase();
   const key = document.getElementById('ob-syncKey').value.trim().toLowerCase();
@@ -592,6 +667,9 @@ async function triggerComputeFundamentals() {
         document.getElementById('ob-price').value = parsed.currentPrice || '';
         document.getElementById('ob-high').value = parsed.week52High || '';
         document.getElementById('ob-highDate').value = parsed.week52HighDate || '';
+        document.getElementById('ob-pe').value = parsed.trailingPE || '';
+        document.getElementById('ob-roce').value = parsed.roce || '';
+        document.getElementById('ob-week52low').value = parsed.week52Low || '';
         status.textContent = `Price: Rs${parsed.currentPrice ?? '—'} · 52w High: Rs${parsed.week52High ?? '—'} (${parsed.week52HighDate ?? 'date unknown'}) · PE: ${parsed.trailingPE ?? '—'} · ROCE: ${parsed.roce ?? '—'}%`;
       } catch (e) {
         status.textContent = 'Computed, but could not fetch result: ' + e.message;
@@ -611,6 +689,9 @@ function openOnboarding() {
   document.getElementById('ob-price').value = '';
   document.getElementById('ob-high').value = '';
   document.getElementById('ob-highDate').value = '';
+  document.getElementById('ob-pe').value = '';
+  document.getElementById('ob-roce').value = '';
+  document.getElementById('ob-week52low').value = '';
   document.getElementById('ob-chunk').value = '';
   document.getElementById('ob-selected-name').textContent = '';
   document.getElementById('ob-compute-status').textContent = '';
@@ -637,6 +718,9 @@ function finishOnboarding() {
   const price = parseFloat(document.getElementById('ob-price').value) || 0;
   const high = parseFloat(document.getElementById('ob-high').value) || price;
   const highDate = document.getElementById('ob-highDate').value.trim();
+  const pe = parseFloat(document.getElementById('ob-pe').value) || null;
+  const roce = parseFloat(document.getElementById('ob-roce').value) || null;
+  const week52Low = parseFloat(document.getElementById('ob-week52low').value) || null;
   const chunk = parseFloat(document.getElementById('ob-chunk').value);
   if (!name || !chunk) { alert('Missing name or chunk size.'); return; }
 
@@ -645,6 +729,8 @@ function finishOnboarding() {
     name, ticker: ticker || null, syncKey: syncKey || null,
     currentPrice: price, peak: Math.max(price, high) || price,
     peakDate: (high > price && highDate) ? highDate : todayISO(),
+    trailingPE: pe, roce, week52Low,
+    fundamentalsUpdatedAt: (pe || roce || week52Low) ? todayISO() : null,
     allocated: 0, chunkSize: chunk, tiersHit: [], deployments: [],
   };
   store.activeId = id;
@@ -923,6 +1009,11 @@ function render() {
 
   document.getElementById('allocated-display').textContent = 'Rs' + fmtRupee(inst.allocated);
   document.getElementById('chunk-display').textContent = 'Rs' + fmtRupee(inst.chunkSize);
+
+  document.getElementById('fund-pe').textContent = inst.trailingPE ? inst.trailingPE.toFixed(2) : '-';
+  document.getElementById('fund-roce').textContent = inst.roce ? inst.roce.toFixed(2) + '%' : '-';
+  document.getElementById('fund-week52low').textContent = inst.week52Low ? ('Rs' + inst.week52Low.toFixed(2)) : '-';
+  document.getElementById('fund-updated').textContent = inst.fundamentalsUpdatedAt || 'Never';
 
   const logEl = document.getElementById('deploy-log');
   logEl.innerHTML = inst.deployments.length === 0
