@@ -1,8 +1,8 @@
 {
   "ticker": "NIFTYBEES.NS",
   "key": "niftybees",
-  "currentPrice": 280.0,
-  "trailingPE": 21.964157,
+  "currentPrice": 278.79,
+  "trailingPE": 21.869242,
   "forwardPE": null,
   "roe": null,
   "peg": null,
@@ -10,5 +10,5 @@
   "week52High": 302.25,
   "week52Low": 251.7,
   "week52HighDate": "2025-12-09",
-  "computedAt": "2026-08-04T05:04:10.371766+00:00"
+  "computedAt": "2026-08-04T17:13:30.340610+00:00"
 }
