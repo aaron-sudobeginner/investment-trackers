@@ -40,32 +40,7 @@
         5
       ],
       "deployments": []
-    },
-    "zerodhaamc-silvercase-msewyp83": {
-      "name": "ZERODHAAMC - SILVERCASE",
-      "ticker": "SILVERCASE.NS",
-      "syncKey": "silvercase",
-      "currentPrice": 21.96,
-      "peak": 38.01,
-      "peakDate": "2026-01-29",
-      "trailingPE": null,
-      "roce": null,
-      "week52Low": 11.36,
-      "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 0,
-      "chunkSize": 2000,
-      "tiersHit": [
-        5
-      ],
-      "deployments": [
-        {
-          "date": "2026-08-04",
-          "tier": 5,
-          "amount": 2000,
-          "price": 21.96
-        }
-      ]
     }
   },
-  "activeId": "zerodhaamc-silvercase-msewyp83"
+  "activeId": "nifty50-mse724cj"
 }
