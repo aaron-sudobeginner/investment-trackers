@@ -1,5 +1,5 @@
 {
-  "totalReserve": 26010.353808057997,
+  "totalReserve": 24010.353808057997,
   "monthlyInflow": 6000,
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-08-04",
@@ -34,13 +34,20 @@
       "roce": null,
       "week52Low": 83.43,
       "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 3000,
+      "allocated": 1000,
       "chunkSize": 2000,
       "tiersHit": [
         5,
-        10
+        10,
+        15
       ],
       "deployments": [
+        {
+          "date": "2026-08-04",
+          "tier": 15,
+          "amount": 2000,
+          "price": 121.12
+        },
         {
           "date": "2026-08-04",
           "tier": 10,
