@@ -1,5 +1,5 @@
 {
-  "totalReserve": 28010.353808057997,
+  "totalReserve": 26010.353808057997,
   "monthlyInflow": 6000,
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-08-04",
@@ -34,13 +34,21 @@
       "roce": null,
       "week52Low": 83.43,
       "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 5000,
+      "allocated": 3000,
       "chunkSize": 2000,
       "tiersHit": [
-        5
+        5,
+        10
       ],
-      "deployments": []
+      "deployments": [
+        {
+          "date": "2026-08-04",
+          "tier": 10,
+          "amount": 2000,
+          "price": 121.12
+        }
+      ]
     }
   },
-  "activeId": "nifty50-mse724cj"
+  "activeId": "gold-mse758qd"
 }
