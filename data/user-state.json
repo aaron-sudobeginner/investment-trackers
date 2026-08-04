@@ -16,7 +16,7 @@
       "roce": null,
       "week52Low": 251.7,
       "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 0,
+      "allocated": 20000,
       "chunkSize": 3000,
       "tiersHit": [
         5
@@ -34,7 +34,7 @@
       "roce": null,
       "week52Low": 83.43,
       "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 0,
+      "allocated": 5000,
       "chunkSize": 2000,
       "tiersHit": [
         5
@@ -52,7 +52,7 @@
       "roce": null,
       "week52Low": 11.36,
       "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 0,
+      "allocated": 2000,
       "chunkSize": 2000,
       "tiersHit": [],
       "deployments": []
