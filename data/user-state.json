@@ -1,26 +1,9 @@
 {
-  "totalReserve": 30000,
+  "totalReserve": 30010.353808057997,
   "monthlyInflow": 6000,
   "liquidYieldPct": 6.5,
-  "lastAccrualDate": "2026-08-02",
+  "lastAccrualDate": "2026-08-04",
   "lastTopupDate": "2026-08-02",
-  "instruments": {
-    "mrf-limited-msb9nyi8": {
-      "name": "MRF Limited",
-      "ticker": "MRF.NS",
-      "syncKey": "mrf",
-      "currentPrice": 0,
-      "peak": 0,
-      "peakDate": "2026-08-02",
-      "trailingPE": 23.201843,
-      "roce": 15.61,
-      "week52Low": 121787.44,
-      "fundamentalsUpdatedAt": "2026-08-02",
-      "allocated": 0,
-      "chunkSize": 5000,
-      "tiersHit": [],
-      "deployments": []
-    }
-  },
-  "activeId": "mrf-limited-msb9nyi8"
+  "instruments": {},
+  "activeId": null
 }
