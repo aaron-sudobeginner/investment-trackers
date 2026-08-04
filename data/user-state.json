@@ -1,5 +1,5 @@
 {
-  "totalReserve": 30010.353808057997,
+  "totalReserve": 28010.353808057997,
   "monthlyInflow": 6000,
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-08-04",
@@ -52,10 +52,19 @@
       "roce": null,
       "week52Low": 11.36,
       "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 2000,
+      "allocated": 0,
       "chunkSize": 2000,
-      "tiersHit": [],
-      "deployments": []
+      "tiersHit": [
+        5
+      ],
+      "deployments": [
+        {
+          "date": "2026-08-04",
+          "tier": 5,
+          "amount": 2000,
+          "price": 21.96
+        }
+      ]
     }
   },
   "activeId": "zerodhaamc-silvercase-msewyp83"
