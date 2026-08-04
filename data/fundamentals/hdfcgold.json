@@ -1,14 +1,14 @@
 {
   "ticker": "HDFCGOLD.NS",
   "key": "hdfcgold",
-  "currentPrice": 121.02,
+  "currentPrice": 121.13,
   "trailingPE": null,
   "forwardPE": null,
   "roe": null,
   "peg": null,
   "roce": null,
   "week52High": 152.3,
-  "week52Low": 83.05,
+  "week52Low": 83.43,
   "week52HighDate": "2026-01-29",
-  "computedAt": "2026-08-02T11:19:31.239305+00:00"
+  "computedAt": "2026-08-04T05:06:21.305047+00:00"
 }
