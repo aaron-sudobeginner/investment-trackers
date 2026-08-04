@@ -20,7 +20,23 @@
       "chunkSize": 3000,
       "tiersHit": [],
       "deployments": []
+    },
+    "gold-mse758qd": {
+      "name": "Gold",
+      "ticker": "HDFCGOLD.NS",
+      "syncKey": "hdfcgold",
+      "currentPrice": 121.13,
+      "peak": 152.3,
+      "peakDate": "2026-01-29",
+      "trailingPE": null,
+      "roce": null,
+      "week52Low": 83.43,
+      "fundamentalsUpdatedAt": "2026-08-04",
+      "allocated": 0,
+      "chunkSize": 2000,
+      "tiersHit": [],
+      "deployments": []
     }
   },
-  "activeId": "nifty50-mse724cj"
+  "activeId": "gold-mse758qd"
 }
