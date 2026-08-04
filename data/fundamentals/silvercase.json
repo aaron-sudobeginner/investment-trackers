@@ -1,0 +1,14 @@
+{
+  "ticker": "SILVERCASE.NS",
+  "key": "silvercase",
+  "currentPrice": 21.96,
+  "trailingPE": null,
+  "forwardPE": null,
+  "roe": null,
+  "peg": null,
+  "roce": null,
+  "week52High": 38.01,
+  "week52Low": 11.36,
+  "week52HighDate": "2026-01-29",
+  "computedAt": "2026-08-04T17:09:19.760911+00:00"
+}
