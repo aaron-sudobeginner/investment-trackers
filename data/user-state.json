@@ -4,25 +4,6 @@
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-08-04",
   "lastTopupDate": "2026-08-02",
-  "instruments": {
-    "nifty50-mse724cj": {
-      "name": "Nifty50",
-      "ticker": "NIFTYBEES.NS",
-      "syncKey": "niftybees",
-      "currentPrice": 278.79,
-      "peak": 302.25,
-      "peakDate": "2026-07-27",
-      "trailingPE": 21.964157,
-      "roce": null,
-      "week52Low": 251.7,
-      "fundamentalsUpdatedAt": "2026-08-04",
-      "allocated": 20000,
-      "chunkSize": 3000,
-      "tiersHit": [
-        5
-      ],
-      "deployments": []
-    }
-  },
-  "activeId": "nifty50-mse724cj"
+  "instruments": {},
+  "activeId": null
 }
