@@ -91,6 +91,12 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 .allocate-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .allocate-row .al-name { flex: 1; font-size: 14px; }
 .allocate-row input { width: 110px; background: var(--panel-raised); border: 1px solid var(--border); color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 14px; padding: 9px 10px; border-radius: 8px; text-align: right; }
+
+.log-actions { display: flex; gap: 12px; margin-top: 4px; }
+.log-action-link { font-size: 11px; color: var(--teal); cursor: pointer; font-family: 'IBM Plex Mono', monospace; }
+.log-action-link.danger { color: var(--rust); }
+.log-edit-row { display: flex; gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.log-edit-row input { width: 100px; background: var(--panel-raised); border: 1px solid var(--gold); color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 13px; padding: 7px 9px; border-radius: 6px; }
 </style>
 </head>
 <body>
@@ -289,6 +295,7 @@ const TIERS = [5,10,15,20,25,30,35,40];
 const PIE_COLORS = ['#C9932F','#3E7C7B','#B5533C','#8A6FB5','#4C8FC9','#C97AB5','#7AC98F','#C9B84C'];
 let store = null;
 let nseSecurities = null;
+let editingDeploymentIndex = null;
 let lastAutoComputedTicker = null;
 
 function todayISO() { return new Date().toISOString().slice(0,10); }
@@ -879,6 +886,11 @@ function nextUntriggeredTier(inst) {
   return null;
 }
 
+function allUntriggeredTiers(inst) {
+  const dd = currentDrawdownPct(inst);
+  return TIERS.filter(t => dd >= t && !inst.tiersHit.includes(t));
+}
+
 function logDeployment(tier) {
   const inst = activeInstrument();
   const amount = Math.min(inst.chunkSize, inst.allocated);
@@ -887,6 +899,77 @@ function logDeployment(tier) {
   store.totalReserve -= amount;
   inst.tiersHit.push(tier);
   inst.deployments.unshift({ date: todayISO(), tier, amount, price: inst.currentPrice });
+  saveStore(); pushStateToGithub();
+  render();
+}
+
+function logManualDeployment() {
+  const inst = activeInstrument();
+  const pctRaw = document.getElementById('manual-tier-pct').value.trim();
+  const amountRaw = document.getElementById('manual-amount').value.trim();
+  const pct = parseFloat(pctRaw);
+  if (pctRaw === '' || isNaN(pct) || pct <= 0) { alert('Enter a valid dip percentage.'); return; }
+
+  let amount = amountRaw === '' ? Math.min(inst.chunkSize, inst.allocated) : parseFloat(amountRaw);
+  if (isNaN(amount) || amount <= 0) { alert('Enter a valid amount.'); return; }
+  if (amount > inst.allocated) {
+    if (!confirm('That\'s more than the Rs' + fmtRupee(inst.allocated) + ' currently allocated to this instrument. Deploy the full allocated amount instead?')) return;
+    amount = inst.allocated;
+  }
+  if (amount <= 0) { alert('No funds allocated to this instrument. Use Allocate on the home page first.'); return; }
+
+  inst.allocated -= amount;
+  store.totalReserve -= amount;
+  if (!inst.tiersHit.includes(pct)) inst.tiersHit.push(pct);
+  inst.deployments.unshift({ date: todayISO(), tier: pct, amount, price: inst.currentPrice, manual: true });
+  saveStore(); pushStateToGithub();
+  render();
+}
+
+function startEditDeployment(idx) {
+  editingDeploymentIndex = idx;
+  render();
+}
+
+function cancelEditDeployment() {
+  editingDeploymentIndex = null;
+  render();
+}
+
+function saveEditedDeployment(idx) {
+  const inst = activeInstrument();
+  const d = inst.deployments[idx];
+  const newAmount = parseFloat(document.getElementById('edit-amount-' + idx).value);
+  if (isNaN(newAmount) || newAmount < 0) { alert('Enter a valid amount.'); return; }
+
+  // reverse the old amount's effect, then apply the new amount
+  const diff = newAmount - d.amount; // positive = deploying more than before
+  if (diff > inst.allocated) {
+    alert('Not enough allocated reserve to increase this deployment by that much. Allocated: Rs' + fmtRupee(inst.allocated));
+    return;
+  }
+  inst.allocated -= diff;
+  store.totalReserve -= diff;
+  d.amount = newAmount;
+
+  editingDeploymentIndex = null;
+  saveStore(); pushStateToGithub();
+  render();
+}
+
+function deleteDeployment(idx) {
+  const inst = activeInstrument();
+  const d = inst.deployments[idx];
+  if (!confirm('Delete this deployment (-' + d.tier + '% tier, Rs' + fmtRupee(d.amount) + ')? The amount returns to allocated reserve, and this tier can trigger again.')) return;
+
+  // give the money back
+  inst.allocated += d.amount;
+  store.totalReserve += d.amount;
+  // un-mark the tier so it can be logged again if still relevant
+  inst.tiersHit = inst.tiersHit.filter(t => t !== d.tier);
+  inst.deployments.splice(idx, 1);
+
+  editingDeploymentIndex = null;
   saveStore(); pushStateToGithub();
   render();
 }
@@ -990,22 +1073,42 @@ function render() {
     document.getElementById('topup-text').textContent = 'Monthly top-up of Rs' + fmtRupee(store.monthlyInflow) + ' is due';
   } else banner.classList.add('hidden');
 
-  const tier = nextUntriggeredTier(inst);
+  const untriggeredTiers = allUntriggeredTiers(inst);
   const actionEl = document.getElementById('action-section');
-  if (tier !== null) {
+  let autoCardsHtml = '';
+  if (untriggeredTiers.length > 0) {
     const amount = Math.min(inst.chunkSize, inst.allocated);
-    actionEl.innerHTML = `<div class="card action-card">
-      <div class="tier-badge">TIER TRIGGERED - ${tier}% FROM PEAK</div>
-      <div class="section-title" style="margin-bottom:2px;">Deploy now</div>
-      <div class="action-amount">Rs${fmtRupee(amount)} <span>from allocated reserve</span></div>
-      <button class="btn btn-gold" onclick="logDeployment(${tier})">Log this deployment</button>
-    </div>`;
+    const cards = untriggeredTiers.map(t => `
+      <div class="card action-card">
+        <div class="tier-badge">TIER TRIGGERED - ${t}% FROM PEAK</div>
+        <div class="section-title" style="margin-bottom:2px;">Deploy for this tier</div>
+        <div class="action-amount">Rs${fmtRupee(amount)} <span>from allocated reserve</span></div>
+        <button class="btn btn-gold" onclick="logDeployment(${t})">Log this deployment</button>
+      </div>`).join('');
+    autoCardsHtml = untriggeredTiers.length > 1
+      ? `<div class="note" style="margin:0 4px 8px;">${untriggeredTiers.length} tiers crossed since last peak — choose which to log:</div>${cards}`
+      : cards;
   } else {
-    actionEl.innerHTML = `<div class="card">
+    autoCardsHtml = `<div class="card">
       <div class="section-title" style="margin-bottom:4px;">No tier triggered</div>
       <div class="note" style="margin-top:0;">Within 5% of peak, or every tier reached so far has already been deployed.</div>
     </div>`;
   }
+
+  const manualHtml = `<div class="card">
+    <div class="section-title" style="margin-bottom:4px;">Log a custom deployment</div>
+    <div class="note" style="margin-top:0;">Not limited to the auto-detected tiers — log whatever dip % you want, whenever you want.</div>
+    <div style="height:10px"></div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <input type="number" id="manual-tier-pct" placeholder="e.g. 12" inputmode="decimal" style="flex:1; background:var(--panel-raised); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; padding:10px 12px; border-radius:8px;">
+      <span class="note" style="margin:0;">%</span>
+      <input type="number" id="manual-amount" placeholder="Rs amount" inputmode="decimal" style="flex:1; background:var(--panel-raised); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; padding:10px 12px; border-radius:8px;">
+    </div>
+    <div style="height:10px"></div>
+    <button class="btn btn-ghost" onclick="logManualDeployment()">Log this deployment</button>
+  </div>`;
+
+  actionEl.innerHTML = autoCardsHtml + manualHtml;
 
   document.getElementById('allocated-display').textContent = 'Rs' + fmtRupee(inst.allocated);
   document.getElementById('chunk-display').textContent = 'Rs' + fmtRupee(inst.chunkSize);
@@ -1018,9 +1121,26 @@ function render() {
   const logEl = document.getElementById('deploy-log');
   logEl.innerHTML = inst.deployments.length === 0
     ? '<div class="log-empty">No deployments logged yet.</div>'
-    : inst.deployments.map(d => `<div class="log-item"><div><div>-${d.tier}% tier</div>
-        <div class="log-date">${d.date} - Rs${d.price.toFixed(2)}</div></div>
-        <div class="log-amount">Rs${fmtRupee(d.amount)}</div></div>`).join('');
+    : inst.deployments.map((d, idx) => {
+        if (editingDeploymentIndex === idx) {
+          return `<div class="log-edit-row">
+            <input type="number" id="edit-amount-${idx}" value="${d.amount}" inputmode="decimal">
+            <button class="btn btn-gold btn-sm" onclick="saveEditedDeployment(${idx})">Save</button>
+            <button class="btn btn-ghost btn-sm" onclick="cancelEditDeployment()">Cancel</button>
+          </div>`;
+        }
+        return `<div class="log-item">
+          <div>
+            <div>-${d.tier}% tier</div>
+            <div class="log-date">${d.date} - Rs${d.price.toFixed(2)}</div>
+            <div class="log-actions">
+              <span class="log-action-link" onclick="startEditDeployment(${idx})">Edit</span>
+              <span class="log-action-link danger" onclick="deleteDeployment(${idx})">Delete</span>
+            </div>
+          </div>
+          <div class="log-amount">Rs${fmtRupee(d.amount)}</div>
+        </div>`;
+      }).join('');
 }
 
 loadStore();
