@@ -903,12 +903,34 @@ function logDeployment(tier) {
   render();
 }
 
+function updateManualPctPreview() {
+  const inst = activeInstrument();
+  const previewEl = document.getElementById('manual-pct-preview');
+  const priceRaw = document.getElementById('manual-buy-price').value.trim();
+  const price = parseFloat(priceRaw);
+  if (!inst || !inst.peak) return;
+  if (priceRaw === '' || isNaN(price)) {
+    previewEl.textContent = 'Peak: Rs' + inst.peak.toFixed(2);
+    return;
+  }
+  const pct = (inst.peak - price) / inst.peak * 100;
+  previewEl.textContent = pct >= 0
+    ? `Peak: Rs${inst.peak.toFixed(2)} → this is ${pct.toFixed(1)}% below peak`
+    : `Peak: Rs${inst.peak.toFixed(2)} → this price is ABOVE the current peak`;
+}
+
 function logManualDeployment() {
   const inst = activeInstrument();
-  const pctRaw = document.getElementById('manual-tier-pct').value.trim();
+  const priceRaw = document.getElementById('manual-buy-price').value.trim();
   const amountRaw = document.getElementById('manual-amount').value.trim();
-  const pct = parseFloat(pctRaw);
-  if (pctRaw === '' || isNaN(pct) || pct <= 0) { alert('Enter a valid dip percentage.'); return; }
+  const price = parseFloat(priceRaw);
+  if (priceRaw === '' || isNaN(price) || price <= 0) { alert('Enter the price you bought at.'); return; }
+  if (!inst.peak) { alert('No peak recorded yet for this instrument.'); return; }
+
+  const pct = Math.round(((inst.peak - price) / inst.peak * 100) * 10) / 10;
+  if (pct < 0) {
+    if (!confirm('This price is above the current peak (' + Math.abs(pct) + '% above). Log it anyway?')) return;
+  }
 
   let amount = amountRaw === '' ? Math.min(inst.chunkSize, inst.allocated) : parseFloat(amountRaw);
   if (isNaN(amount) || amount <= 0) { alert('Enter a valid amount.'); return; }
@@ -921,7 +943,7 @@ function logManualDeployment() {
   inst.allocated -= amount;
   store.totalReserve -= amount;
   if (!inst.tiersHit.includes(pct)) inst.tiersHit.push(pct);
-  inst.deployments.unshift({ date: todayISO(), tier: pct, amount, price: inst.currentPrice, manual: true });
+  inst.deployments.unshift({ date: todayISO(), tier: pct, amount, price, manual: true });
   saveStore(); pushStateToGithub();
   render();
 }
@@ -1096,15 +1118,19 @@ function render() {
   }
 
   const manualHtml = `<div class="card">
-    <div class="section-title" style="margin-bottom:4px;">Log a custom deployment</div>
-    <div class="note" style="margin-top:0;">Not limited to the auto-detected tiers — log whatever dip % you want, whenever you want.</div>
+    <div class="section-title" style="margin-bottom:4px;">Log a deployment by price</div>
+    <div class="note" style="margin-top:0;">Enter the price you actually bought at — the dip % is calculated automatically from the peak.</div>
     <div style="height:10px"></div>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <input type="number" id="manual-tier-pct" placeholder="e.g. 12" inputmode="decimal" style="flex:1; background:var(--panel-raised); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; padding:10px 12px; border-radius:8px;">
-      <span class="note" style="margin:0;">%</span>
-      <input type="number" id="manual-amount" placeholder="Rs amount" inputmode="decimal" style="flex:1; background:var(--panel-raised); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:14px; padding:10px 12px; border-radius:8px;">
+    <div class="input-row" style="margin-bottom:8px;">
+      <label>Price you bought at (Rs)</label>
+      <input type="number" id="manual-buy-price" placeholder="e.g. ${inst.currentPrice ? inst.currentPrice.toFixed(2) : ''}" inputmode="decimal" oninput="updateManualPctPreview()">
     </div>
+    <div class="note" id="manual-pct-preview" style="margin-top:0;">Peak: Rs${inst.peak ? inst.peak.toFixed(2) : '-'}</div>
     <div style="height:10px"></div>
+    <div class="input-row" style="margin-bottom:8px;">
+      <label>Amount (Rs) — leave blank to use chunk size</label>
+      <input type="number" id="manual-amount" placeholder="Rs${fmtRupee(Math.min(inst.chunkSize, inst.allocated))}" inputmode="decimal">
+    </div>
     <button class="btn btn-ghost" onclick="logManualDeployment()">Log this deployment</button>
   </div>`;
 
