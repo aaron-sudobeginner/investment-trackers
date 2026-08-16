@@ -1,40 +1,46 @@
 {
-  "totalReserve": 30010.353808057997,
-  "monthlyInflow": 6000,
+  "totalReserve": 30072.551740524188,
+  "monthlyInflow": 4000,
   "liquidYieldPct": 6.5,
-  "lastAccrualDate": "2026-08-04",
+  "lastAccrualDate": "2026-08-16",
   "lastTopupDate": "2026-08-02",
   "instruments": {
     "nifty50-msex4426": {
       "name": "Nifty50",
       "ticker": "NIFTYBEES.NS",
       "syncKey": "niftybees",
-      "currentPrice": 278.79,
+      "currentPrice": 278.35,
       "peak": 302.25,
-      "peakDate": "2025-12-09",
+      "peakDate": "2026-07-27",
       "trailingPE": 21.869242,
       "roce": null,
       "week52Low": 251.7,
       "fundamentalsUpdatedAt": "2026-08-04",
       "allocated": 0,
       "chunkSize": 3000,
-      "tiersHit": [],
+      "tiersHit": [
+        5
+      ],
       "deployments": []
     },
     "gold-msexqg2q": {
       "name": "Gold",
       "ticker": "HDFCGOLD.NS",
       "syncKey": "hdfcgold",
-      "currentPrice": 121.12,
-      "peak": 152.3,
-      "peakDate": "2026-01-29",
+      "currentPrice": 129.33,
+      "peak": 152.3000030517578,
+      "peakDate": "2026-08-03",
       "trailingPE": null,
       "roce": null,
       "week52Low": 83.43,
       "fundamentalsUpdatedAt": "2026-08-04",
       "allocated": 0,
       "chunkSize": 1000,
-      "tiersHit": [],
+      "tiersHit": [
+        5,
+        10,
+        15
+      ],
       "deployments": []
     }
   },
