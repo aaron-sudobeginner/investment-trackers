@@ -1,9 +1,9 @@
 {
-  "totalReserve": 30072.551740524188,
+  "totalReserve": 34072.551740524184,
   "monthlyInflow": 4000,
   "liquidYieldPct": 6.5,
   "lastAccrualDate": "2026-08-16",
-  "lastTopupDate": "2026-08-02",
+  "lastTopupDate": "2026-08-16",
   "instruments": {
     "nifty50-msex4426": {
       "name": "Nifty50",
