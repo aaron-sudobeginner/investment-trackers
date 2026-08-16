@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dip-reserve-v2';
+const CACHE_NAME = 'dip-reserve-v3';
 const ASSETS = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (event) => {
@@ -17,15 +17,19 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Network-first for the HTML page itself, so you always get the latest version
-// when online, and only fall back to the cached copy when offline.
-// Cache-first for static assets (icons, manifest) that rarely change.
+// Network-first for the HTML page AND all JSON data files (price data, fundamentals,
+// NSE list, watchlist, cross-device state) -- these must always be fresh. Only the
+// icons stay cache-first, since those genuinely never change.
+// Falls back to cache only when there's no network at all (offline use).
 self.addEventListener('fetch', (event) => {
-  const isHTML = event.request.mode === 'navigate' || event.request.url.endsWith('.html');
+  const url = event.request.url;
+  const isHTML = event.request.mode === 'navigate' || url.endsWith('.html');
+  const isJSON = url.endsWith('.json');
+  const networkFirst = isHTML || isJSON;
 
-  if (isHTML) {
+  if (networkFirst) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: 'no-store' })
         .then((res) => {
           const clone = res.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
