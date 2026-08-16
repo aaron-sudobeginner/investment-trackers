@@ -131,6 +131,13 @@ header .sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
     <div class="input-row"><label>Fine-grained personal access token</label><input type="password" id="gh-token" placeholder="github_pat_..."></div>
     <button class="btn btn-gold" onclick="saveGithubConfig()">Save</button>
     <button class="btn btn-ghost" style="margin-top:8px;" onclick="testGithubConnection()">Test connection</button>
+    <button class="btn btn-ghost" style="margin-top:8px;" onclick="sendTestAlert()">Send test alert (check email works)</button>
+    <div id="test-alert-progress-wrap" class="hidden" style="margin-top:10px;">
+      <div style="background:var(--panel-raised); border-radius:6px; height:6px; overflow:hidden;">
+        <div id="test-alert-progress-bar" style="height:100%; width:0%; background:var(--gold); transition:width 0.4s;"></div>
+      </div>
+      <div class="note" id="test-alert-status" style="margin-top:6px;"></div>
+    </div>
     <div class="note" id="gh-status"></div>
   </div>
 
@@ -389,6 +396,21 @@ function saveGithubConfig() {
   if (!owner || !repo || !token) { document.getElementById('gh-status').textContent = 'Fill in all three fields.'; return; }
   localStorage.setItem('dip-tracker-github-config', JSON.stringify({ owner, repo, token }));
   document.getElementById('gh-status').textContent = 'Saved.';
+}
+
+async function sendTestAlert() {
+  document.getElementById('test-alert-progress-wrap').classList.remove('hidden');
+  const bar = document.getElementById('test-alert-progress-bar');
+  const status = document.getElementById('test-alert-status');
+
+  runGithubWorkflowWithProgress('test_alert.yml', {},
+    (pct, label) => { bar.style.width = pct + '%'; status.textContent = label; },
+    (success, detail) => {
+      status.textContent = success
+        ? 'Sent! Check your email (and spam folder) in a moment for an issue titled "Test alert - ..." with today\'s date/time.'
+        : 'Failed: ' + detail;
+    }
+  );
 }
 
 async function testGithubConnection() {
