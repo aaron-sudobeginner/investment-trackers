@@ -1,7 +1,7 @@
 {
   "name": "HDFC Bank Limited",
   "ticker": "HDFCBANK.NS",
-  "price": 846.0,
+  "price": 817.8,
   "peak": 1020.5,
   "peakDate": "2026-07-27T13:30:38.373742+00:00",
   "tiersHit": [
@@ -12,5 +12,5 @@
     25,
     30
   ],
-  "lastChecked": "2026-11-20T11:14:41.945313+00:00"
+  "lastChecked": "2026-11-23T12:07:40.076004+00:00"
 }
