@@ -1,7 +1,7 @@
 {
   "name": "Nifty BeES",
   "ticker": "NIFTYBEES.NS",
-  "price": 295.33,
+  "price": 292.0,
   "peak": 302.25,
   "peakDate": "2026-07-27T13:30:37.738065+00:00",
   "tiersHit": [
@@ -9,5 +9,5 @@
     10,
     15
   ],
-  "lastChecked": "2026-11-26T12:09:45.664292+00:00"
+  "lastChecked": "2026-11-27T11:57:43.705785+00:00"
 }
